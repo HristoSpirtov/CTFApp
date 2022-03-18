@@ -1,0 +1,60 @@
+@import "~bootstrap/dist/css/bootstrap.css"; 
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
+a {
+    color: #337ab7;
+}
+
+body {
+    color: #373742;
+}
+
+
+.container{
+    font-family: 'Lato', sans-serif;
+    text-shadow: none;
+}
+
+.btn {
+    letter-spacing: 1px;
+    border-radius: 0;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 600;
+    padding: 8px 20px;
+}
+
+.form-control {
+    position: relative;
+    display: block;
+    padding: 0.8em!important;
+    border-radius: 0;
+    background: #f0f0f0;
+    color: #aaa;
+    font-weight: 400;
+    -webkit-appearance: none;
+    height: auto!important;
+}
+
+.form-control:focus {
+    background-color: #fff;
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
+}
+
+.form-control:focus, .input-filled-valid {
+    border-color: #a3d39c;
+    box-shadow: 0 0 0 0.1rem #a3d39c;
+    transition: background-color .3s, border-color .3s;
+}
+
+
+
+
+
+
+
+

@@ -1,0 +1,43 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a href="/" class="navbar-brand">
+            CTFa
+        </a>
+        <!-- to be refactored with ngx bootstrap Collapse -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="base-navbars" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <!--  -->
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/users">Users</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/teams">Teams</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/scoreboard">Scoreboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/challenges">Challenges</a>
+                </li>
+            </ul>
+            <hr class="d-sm-flex d-md-flex d-lg-none">
+            <ul class="navbar-nav ml-md-auto d-block d-sm-flex d-md-flex">
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/register">
+                        <fa-icon [icon]="registerIcon">Register</fa-icon>
+                        Register                   
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/login">
+                        <fa-icon [icon]="signInIcon">Register</fa-icon>
+                        Login
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
