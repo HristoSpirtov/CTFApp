@@ -1,6 +1,7 @@
-package com.ctf.ctfserver.service;
+package com.ctf.ctfserver.service.user;
 
-import com.ctf.ctfserver.domain.User;
+import com.ctf.ctfserver.domain.entities.User;
+import com.ctf.ctfserver.domain.models.service.UserServiceModel;
 import com.ctf.ctfserver.exception.domain.UserNotFoundException;
 import com.ctf.ctfserver.exception.domain.UsernameExistsException;
 
@@ -13,5 +14,5 @@ public interface UserService {
     User findUserByUsername(String username);
     List<User> getUsers();
 
-    User register(String name, String username) throws UserNotFoundException, UsernameExistsException;
+    UserServiceModel register(UserServiceModel userServiceModel) throws UserNotFoundException, UsernameExistsException;
 }

@@ -35,7 +35,16 @@ public class JWTTokenProvider {
                 .withAudience(GET_CTFA_CLIENT)
                 .withIssuedAt(new Date()).withSubject(userPrincipal.getUsername())
                 .withArrayClaim(AUTHORITIES, claims)
-                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .withExpiresAt(new Date(System.currentTimeMillis() + JWT_EXPIRATION_TIME))
+                .sign(Algorithm.HMAC512(secret.getBytes()));
+    }
+
+    public String generateJWTRefreshToken(UserPrincipal userPrincipal) {
+        return JWT.create()
+                .withIssuer(GET_CTFA)
+                .withAudience(GET_CTFA_CLIENT)
+                .withIssuedAt(new Date()).withSubject(userPrincipal.getUsername())
+                .withExpiresAt(new Date(System.currentTimeMillis() + JWT_REFRESH_TOKEN_EXPIRATION_TIME))
                 .sign(Algorithm.HMAC512(secret.getBytes()));
     }
 
@@ -66,7 +75,7 @@ public class JWTTokenProvider {
 
     private boolean isTokenExpired(JWTVerifier verifier, String token) {
         Date expiration = verifier.verify(token).getExpiresAt();
-        return expiration.before(new Date());
+        return new Date().before(expiration);
     }
 
 

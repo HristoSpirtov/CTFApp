@@ -1,20 +1,27 @@
 package com.ctf.ctfserver.api;
 
 
-import com.ctf.ctfserver.domain.User;
+import com.ctf.ctfserver.domain.entities.User;
+import com.ctf.ctfserver.domain.models.mapper.UserMapper;
+import com.ctf.ctfserver.domain.models.binding.UserRegisterBindingModel;
+import com.ctf.ctfserver.domain.models.service.UserServiceModel;
 import com.ctf.ctfserver.exception.ExceptionHandling;
 import com.ctf.ctfserver.exception.domain.UserNotFoundException;
 import com.ctf.ctfserver.exception.domain.UsernameExistsException;
-import com.ctf.ctfserver.service.UserService;
-import lombok.Data;
+import com.ctf.ctfserver.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.*;
+
+import static com.ctf.ctfserver.constant.SecurityConstant.TOKEN_PREFIX;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,27 +32,17 @@ public class UserController extends ExceptionHandling {
 
     @GetMapping("/users")
     public ResponseEntity<List<User>>getUsers() throws UserNotFoundException {
-        throw new UserNotFoundException("This user was not found");
-//        return ResponseEntity.ok().body(userService.getUsers());
+
+        return ResponseEntity.ok().body(userService.getUsers());
     }
 
-//    @PostMapping("/user/save")
-//    public ResponseEntity<User>saveUser(@RequestBody User user) {
-//        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("api/user/save").toUriString());
-//        return ResponseEntity.created(uri).body(userService.saveUser(user));
-//    }
-
-//    @PostMapping("/role/save")
-//    public ResponseEntity<Role>saveRole(@RequestBody Role role) {
-//        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("api/role/save").toUriString());
-//        return ResponseEntity.created(uri).body(userService.saveRole(role));
-//    }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user) throws UserNotFoundException, UsernameExistsException {
+    public ResponseEntity<UserServiceModel> register(@RequestBody UserRegisterBindingModel userRegisterBindingModel) throws UserNotFoundException, UsernameExistsException {
 
-        User newUser = userService.register(user.getName(), user.getUsername());
-        return new ResponseEntity<>(newUser, HttpStatus.OK);
+        UserServiceModel userServiceModel = UserMapper.INSTANCE.userServiceBindingModelToUserServiceModel(userRegisterBindingModel);
+        UserServiceModel newUser = userService.register(userServiceModel);
+        return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
 
@@ -61,9 +58,9 @@ public class UserController extends ExceptionHandling {
 //    @GetMapping("/token/refresh")
 //    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
 //        String authorizationHeader = request.getHeader(AUTHORIZATION);
-//        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+//        if (authorizationHeader != null && authorizationHeader.startsWith(TOKEN_PREFIX)) {
 //            try {
-//                String refreshToken = authorizationHeader.substring("Bearer ".length());
+//                String refreshToken = authorizationHeader.substring(TOKEN_PREFIX.length());
 //                Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
 //                JWTVerifier verifier = JWT.require(algorithm).build();
 //                DecodedJWT decodedJWT = verifier.verify(refreshToken);
@@ -99,8 +96,3 @@ public class UserController extends ExceptionHandling {
 
 }
 
-@Data
-class RoleToUserForm {
-    private String username;
-    private String roleName;
-}

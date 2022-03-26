@@ -5,6 +5,7 @@ import com.ctf.ctfserver.filter.JWTAccessDeniedHandler;
 import com.ctf.ctfserver.filter.JWTAuthenticationEntryPoint;
 import com.ctf.ctfserver.filter.JWTAuthenticationFilter;
 import com.ctf.ctfserver.filter.JWTAuthorizationFilter;
+import com.ctf.ctfserver.utility.JWTTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,6 +35,7 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
     private final JWTAuthorizationFilter jwtAuthorizationFilter;
     private final JWTAccessDeniedHandler jwtAccessDeniedHandler;
     private final JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JWTTokenProvider jwtTokenProvider;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -42,14 +44,14 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        JWTAuthenticationFilter customAuthenticationFilter = new JWTAuthenticationFilter(authenticationManagerBean());
+        JWTAuthenticationFilter customAuthenticationFilter = new JWTAuthenticationFilter(authenticationManagerBean(), jwtTokenProvider);
         customAuthenticationFilter.setFilterProcessesUrl("/api/login");
 
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers(SecurityConstant.PUBLIC_URLS).permitAll();
-        http.authorizeRequests().antMatchers(GET, "api/user/**").hasAuthority("ROLE_USER");
-        http.authorizeRequests().antMatchers(POST, "api/user/save/**").hasAuthority("ROLE_ADMIN");
+        http.authorizeRequests().antMatchers(GET, "/api/users/**").hasAuthority("ROLE_USER");
+        http.authorizeRequests().antMatchers(POST, "/api/user/save/**").hasAuthority("ROLE_ROOT");
         http.authorizeRequests().anyRequest().authenticated();
         http.exceptionHandling().accessDeniedHandler(jwtAccessDeniedHandler).authenticationEntryPoint(jwtAuthenticationEntryPoint);
         http.addFilter(customAuthenticationFilter);

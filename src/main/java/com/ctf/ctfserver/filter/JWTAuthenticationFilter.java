@@ -2,8 +2,17 @@ package com.ctf.ctfserver.filter;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.ctf.ctfserver.domain.HttpResponse;
+import com.ctf.ctfserver.domain.UserPrincipal;
+import com.ctf.ctfserver.domain.models.service.UserServiceModel;
+import com.ctf.ctfserver.utility.JWTTokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,16 +30,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.ctf.ctfserver.constant.SecurityConstant.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
+@RequiredArgsConstructor
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
+    private final JWTTokenProvider jwtTokenProvider;
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
-    }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -41,34 +50,27 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
         return authenticationManager.authenticate(authenticationToken);
-
     }
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
-        User user = (User) authentication.getPrincipal();
-        Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
-        String accessToken = JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 1 * 60 * 1000))
-                .withIssuer(request.getRequestURL().toString())
-                .withClaim("roles", user.getAuthorities().stream().map(r -> r.getAuthority()).collect(Collectors.toList()))
-                .sign(algorithm);
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
-        String refreshToken = JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
-                .withIssuer(request.getRequestURL().toString())
-                .sign(algorithm);
+        String accessToken = jwtTokenProvider.generateJWTToken(userPrincipal);
+        String refreshToken = jwtTokenProvider.generateJWTRefreshToken(userPrincipal);
+//        HttpResponse httpResponse = new HttpResponse(
+//                new Date(),
+//                HttpStatus.CREATED.value(),
+//                HttpStatus.CREATED,
+//                HttpStatus.CREATED.getReasonPhrase().toUpperCase(),
+//                "User successfully logged in".toUpperCase());
 
-//        response.setHeader("access_token", accessToken);
-//        response.setHeader("refresh_token", refreshToken);
-
-        Map<String, String> tokens = new HashMap<>();
-        tokens.put("access_token", accessToken);
-        tokens.put("refresh_token", refreshToken);
-        response.setContentType(APPLICATION_JSON_VALUE);
-        new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+        response.setHeader(JWT_TOKEN_HEADER, accessToken);
+        response.setHeader(JWT_REFRESH_TOKEN_HEADER, refreshToken);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.writeValue(response.getOutputStream(), userPrincipal.getUser());
 
     }
+
+
 }

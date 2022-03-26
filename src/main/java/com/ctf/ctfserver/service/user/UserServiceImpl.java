@@ -1,10 +1,13 @@
-package com.ctf.ctfserver.service;
+package com.ctf.ctfserver.service.user;
 
-import com.ctf.ctfserver.domain.User;
+import com.ctf.ctfserver.domain.entities.User;
 import com.ctf.ctfserver.domain.UserPrincipal;
+import com.ctf.ctfserver.domain.models.mapper.UserMapper;
+import com.ctf.ctfserver.domain.models.service.UserServiceModel;
 import com.ctf.ctfserver.exception.domain.UserNotFoundException;
 import com.ctf.ctfserver.exception.domain.UsernameExistsException;
 import com.ctf.ctfserver.repository.UserRepository;
+import com.ctf.ctfserver.service.role.RoleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -21,8 +24,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static com.ctf.ctfserver.enumeration.Role.ROLE_USER;
-
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -31,6 +32,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RoleService roleService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -42,8 +44,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             log.info("User {} found in the database", username);
         }
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        user.getAuthorities().forEach(role -> {
-            authorities.add(new SimpleGrantedAuthority(role));
+        user.getRoles().forEach(role -> {
+            authorities.add(new SimpleGrantedAuthority(role.getRole()));
         });
         return new UserPrincipal(user);
     }
@@ -84,48 +86,23 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 
     @Override
-    public User register(String name, String username) throws UserNotFoundException, UsernameExistsException {
-        validateNewUsername("", username);
-        User user = new User();
-        String password = generatePassword();
-        String encodedPassword = encodePassword(password);
-        user.setName(name);
-        user.setUsername(username);
-        user.setPassword(encodedPassword);
-        user.setRole(ROLE_USER.name());
-        user.setAuthorities(ROLE_USER.getAuthorities());
-        userRepository.save(user);
-        log.info("New user password: " + password);
-        return user;
+    public UserServiceModel register(UserServiceModel userServiceModel) {
+
+        this.roleService.seedRolesInDb();
+        if (this.userRepository.count() == 0) {
+            userServiceModel.setRoles(this.roleService.finAllRoles());
+        } else {
+            userServiceModel.setRoles(new ArrayList<>());
+            userServiceModel.getRoles().add(this.roleService.findByRole("ROLE_USER"));
+        }
+        User user = UserMapper.INSTANCE.userServiceModelToUser(userServiceModel);
+        user.setPassword(encodePassword(userServiceModel.getPassword()));
+
+        return UserMapper.INSTANCE.userToUserServiceModel(this.userRepository.save(user));
     }
 
     private String encodePassword(String password) {
         return this.passwordEncoder.encode(password);
-    }
-
-    private String generatePassword() {
-        return RandomStringUtils.randomAlphanumeric(10);
-    }
-
-
-    private User validateNewUsername(String currentUsername, String newUsername) throws UserNotFoundException, UsernameExistsException {
-        User userByNewUsername = findUserByUsername(newUsername);
-
-        if(StringUtils.isNotBlank(currentUsername)) {
-            User currentUser = findUserByUsername(currentUsername);
-            if(currentUser == null) {
-                throw new UserNotFoundException("No user found bu username" + currentUsername);
-            }
-            if(userByNewUsername != null && !currentUser.getId().equals(userByNewUsername.getId())) {
-                throw new UsernameExistsException("Username already exists");
-            }
-            return currentUser;
-        } else {
-            if(userByNewUsername != null) {
-                throw new UsernameExistsException("username already exists");
-            }
-            return null;
-        }
     }
 
 
