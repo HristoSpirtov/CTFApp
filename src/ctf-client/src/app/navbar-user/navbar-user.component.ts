@@ -1,6 +1,8 @@
+import { AuthenticationService } from './../service/authentication.service';
 import { Component, OnInit } from '@angular/core';
 
-import { faUserPlus, faSignInAlt } from '@fortawesome/free-solid-svg-icons';
+import { faUserPlus, faSignInAlt  } from '@fortawesome/free-solid-svg-icons';
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons'; 
 
 @Component({
   selector: 'navbar-user',
@@ -9,13 +11,27 @@ import { faUserPlus, faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 })
 export class NavbarUserComponent implements OnInit {
 
+  isLoggedIn! : boolean;
+
   signInIcon = faSignInAlt;
   registerIcon = faUserPlus;
+  signoutIcon = faSignOutAlt;
 
 
-  constructor() { }
+  constructor(private authenticationService : AuthenticationService) {
+    
+   }
 
   ngOnInit(): void {
+    this.authenticationService.isLoggedIn().subscribe(x => {
+      this.isLoggedIn = x;
+    });
+    
+  }
+
+  logout() {
+    console.log("logout")
+    this.authenticationService.logout();
   }
 
 }

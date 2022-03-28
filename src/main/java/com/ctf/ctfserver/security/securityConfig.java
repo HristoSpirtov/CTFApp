@@ -18,7 +18,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.CorsFilter;
 
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
@@ -47,15 +49,15 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
         JWTAuthenticationFilter customAuthenticationFilter = new JWTAuthenticationFilter(authenticationManagerBean(), jwtTokenProvider);
         customAuthenticationFilter.setFilterProcessesUrl("/api/login");
 
-        http.csrf().disable();
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeRequests().antMatchers(SecurityConstant.PUBLIC_URLS).permitAll();
-        http.authorizeRequests().antMatchers(GET, "/api/users/**").hasAuthority("ROLE_USER");
-        http.authorizeRequests().antMatchers(POST, "/api/user/save/**").hasAuthority("ROLE_ROOT");
-        http.authorizeRequests().anyRequest().authenticated();
-        http.exceptionHandling().accessDeniedHandler(jwtAccessDeniedHandler).authenticationEntryPoint(jwtAuthenticationEntryPoint);
-        http.addFilter(customAuthenticationFilter);
-        http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.cors().and().
+        csrf().disable().
+        sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().
+        authorizeRequests().antMatchers(SecurityConstant.PUBLIC_URLS).permitAll().and().
+        authorizeRequests().anyRequest().authenticated().and().
+        exceptionHandling()
+                .accessDeniedHandler(jwtAccessDeniedHandler).authenticationEntryPoint(jwtAuthenticationEntryPoint).and().
+        addFilter(customAuthenticationFilter).
+        addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
@@ -63,4 +65,7 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
+
+
 }

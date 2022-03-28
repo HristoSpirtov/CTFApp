@@ -1,37 +1,37 @@
 package com.ctf.ctfserver.filter;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.ctf.ctfserver.domain.HttpResponse;
+
 import com.ctf.ctfserver.domain.UserPrincipal;
-import com.ctf.ctfserver.domain.models.service.UserServiceModel;
 import com.ctf.ctfserver.utility.JWTTokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
+import java.net.http.HttpRequest;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+
 import static com.ctf.ctfserver.constant.SecurityConstant.*;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 
 @Slf4j
 @RequiredArgsConstructor
@@ -41,10 +41,13 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private final JWTTokenProvider jwtTokenProvider;
 
 
+    @SneakyThrows
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
+        Gson gson = new Gson();
+        Map map = gson.fromJson(request.getReader().readLine(), Map.class);
+        String username = (String) map.get("username");
+        String password = (String) map.get("password");
         log.info("Username is: {}", username);
         log.info("Password is: {}", password);
 
