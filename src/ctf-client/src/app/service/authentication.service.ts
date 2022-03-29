@@ -1,91 +1,95 @@
+import { HeaderType } from './../enum/header-type.enum';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http' 
-import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient, HttpResponse } from '@angular/common/http' 
+import { BehaviorSubject, map, Observable, pipe } from 'rxjs';
 import { User } from '../model/user';
 import { JwtHelperService } from '@auth0/angular-jwt';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
   private _host;
-  private token: string;
-  private loggedInUser!: string;
   private jwtHelper;
-  isLoginSubject = new BehaviorSubject<boolean>(this.isUserLoggedIn());
+  private isLoginSubject;
   
 
   constructor(private http: HttpClient) {
     this._host = environment.apiUrl;
-    this.token = "";
-    this.loggedInUser = "";
     this.jwtHelper = new JwtHelperService();
-   }
-
-  public login(loginForm: any) : Observable<HttpResponse<User>> {
-    this.http.post<User>(`${this.host}/api/login`, loginForm, {observe: 'response'}).subscribe(() => {
-      this.isLoginSubject.next(true);
-    })
-    return this.http.post<User>(`${this.host}/api/login`, loginForm, {observe: 'response'});
+    this.isLoginSubject = new BehaviorSubject<boolean>(this.isUserLoggedIn());
   }
+
+  public login(loginForm: any) : Observable<User> {
+    this.http.post<User>(`${this.host}/api/login`, loginForm, {observe: 'response'}).subscribe({
+      next: (response : HttpResponse<User>) => {
+        const token = response.headers.get(HeaderType.JWT_TOKEN)!;
+        const refreshToken = response.headers.get(HeaderType.REFRESH_TOKEN)!;
+        this.saveTokens(token, refreshToken);
+        this.saveUser(response.body!);
+        this.isLoginSubject.next(true);
+    },     
+      error: () => {
+        this.isLoginSubject.next(false);
+    }});
+
+    return this.http.post<User>(`${this.host}/api/login`, loginForm, {observe: 'response'}).pipe(map((user : HttpResponse<User>) => user.body!));
+  }
+
 
   public isLoggedIn() : Observable<boolean> {
     return this.isLoginSubject.asObservable();
-}
-
-  
+  }
 
   public register(registerForm: any) : Observable<User> {
     return this.http.post<User>(`${this.host}/api/register`, registerForm);
   }
 
   public logout() : void {
-    this.token = "";
-    this.loggedInUser = "";
-    localStorage.removeItem('user');
     localStorage.removeItem('token');
-    localStorage.removeItem('users');
+    localStorage.removeItem('user');
+    localStorage.removeItem('refresh-token');
     this.isLoginSubject.next(false);
   }
 
-  public saveToken(token: string) : void {
-    this.token = token;
-    localStorage.setItem('token', token);
+  public getToken() : string | null {
+    return localStorage.getItem('token');
   }
 
-  public addUserToCash(user: User) : void {
-    localStorage.setItem('user', JSON.stringify(user));
+  public getRefreshToken() : string | null {
+    return localStorage.getItem('refresh-token');
   }
 
-  public getUserFromCache() : User {
-    return JSON.parse(localStorage.getItem('user')!)
-  }
 
-  public loadToken() : void {
-    this.token = localStorage.getItem('token') as string;
-  }
 
-  public getToken() : string {
-    return this.token;
-  }
-
-  public isUserLoggedIn() : boolean {
-    this.loadToken();
-    if (this.token !== null && this.token !== undefined) {   
-      console.log(this.token);
-      if (this.jwtHelper.decodeToken(this.token).sub != null || '') {
-        if (!this.jwtHelper.isTokenExpired(this.token)) {
-          this.loggedInUser = this.jwtHelper.decodeToken(this.token).sub;
+  private isUserLoggedIn() : boolean {
+    let token : string | null = this.getToken();
+    if (token !== null && token !== undefined) {   
+      if (this.jwtHelper.decodeToken(token).sub !== null || '') {
+        if (!this.jwtHelper.isTokenExpired(token)) {
           return true;
         }
       }
     } 
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     return false;
 
   }
 
   get host() : string {
     return this._host;
+  }
+
+  private saveTokens(token : string, refreshToken : string) {
+    localStorage.setItem('token', token);
+    localStorage.setItem('refresh-token', refreshToken);
+
+
+  }
+  private saveUser(user : User) {
+    localStorage.setItem('user', JSON.stringify(user));
   }
 }

@@ -5,6 +5,7 @@ import com.ctf.ctfserver.domain.UserPrincipal;
 import com.ctf.ctfserver.domain.entities.User;
 import com.ctf.ctfserver.domain.models.mapper.UserMapper;
 import com.ctf.ctfserver.domain.models.binding.UserRegisterBindingModel;
+import com.ctf.ctfserver.domain.models.response.UserResponseModel;
 import com.ctf.ctfserver.domain.models.service.UserServiceModel;
 import com.ctf.ctfserver.exception.ExceptionHandling;
 import com.ctf.ctfserver.exception.domain.UserNotFoundException;
@@ -14,17 +15,16 @@ import com.ctf.ctfserver.utility.JWTTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.*;
 
 import static com.ctf.ctfserver.constant.SecurityConstant.*;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,10 +42,12 @@ public class UserController extends ExceptionHandling {
 
 
     @PostMapping("/register")
-    public ResponseEntity<UserServiceModel> register(@RequestBody UserRegisterBindingModel userRegisterBindingModel) throws UserNotFoundException, UsernameExistsException {
+    public ResponseEntity<UserResponseModel> register(@RequestBody UserRegisterBindingModel userRegisterBindingModel) throws UserNotFoundException, UsernameExistsException {
 
-        UserServiceModel userServiceModel = UserMapper.INSTANCE.userServiceBindingModelToUserServiceModel(userRegisterBindingModel);
-        UserServiceModel newUser = userService.register(userServiceModel);
+        UserServiceModel userServiceModel = UserMapper.INSTANCE
+                .userServiceBindingModelToUserServiceModel(userRegisterBindingModel);
+        UserResponseModel newUser = UserMapper
+                .INSTANCE.userServiceModelToUserResponseModel(this.userService.register(userServiceModel));
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
@@ -58,7 +60,7 @@ public class UserController extends ExceptionHandling {
 
             String refreshToken = authorizationHeader.substring(TOKEN_PREFIX.length());
             String username = jwtTokenProvider.getSubject(refreshToken);
-            if (jwtTokenProvider.isTokenValid(username, refreshToken)) {
+            if (jwtTokenProvider.isTokenValid(refreshToken)) {
 
                 UserPrincipal user = new UserPrincipal(this.userService.findUserByUsername(username));
                 String newAccessToken = jwtTokenProvider.generateJWTToken(user);

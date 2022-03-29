@@ -5,6 +5,7 @@ import com.ctf.ctfserver.filter.JWTAccessDeniedHandler;
 import com.ctf.ctfserver.filter.JWTAuthenticationEntryPoint;
 import com.ctf.ctfserver.filter.JWTAuthenticationFilter;
 import com.ctf.ctfserver.filter.JWTAuthorizationFilter;
+import com.ctf.ctfserver.service.user.UserService;
 import com.ctf.ctfserver.utility.JWTTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -18,9 +19,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.filter.CorsFilter;
+
 
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
@@ -55,7 +55,7 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
         authorizeRequests().antMatchers(SecurityConstant.PUBLIC_URLS).permitAll().and().
         authorizeRequests().anyRequest().authenticated().and().
         exceptionHandling()
-                .accessDeniedHandler(jwtAccessDeniedHandler).authenticationEntryPoint(jwtAuthenticationEntryPoint).and().
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint).accessDeniedHandler(jwtAccessDeniedHandler).and().
         addFilter(customAuthenticationFilter).
         addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
     }

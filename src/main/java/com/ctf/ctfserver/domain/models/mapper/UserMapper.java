@@ -2,6 +2,7 @@ package com.ctf.ctfserver.domain.models.mapper;
 
 import com.ctf.ctfserver.domain.entities.User;
 import com.ctf.ctfserver.domain.models.binding.UserRegisterBindingModel;
+import com.ctf.ctfserver.domain.models.response.UserResponseModel;
 import com.ctf.ctfserver.domain.models.service.UserServiceModel;
 import org.mapstruct.Mapper;
 
@@ -15,4 +16,6 @@ public interface UserMapper {
     UserServiceModel userServiceBindingModelToUserServiceModel(UserRegisterBindingModel userRegisterBindingModel);
     User userServiceModelToUser(UserServiceModel userServiceModel);
     UserServiceModel userToUserServiceModel(User user);
+    UserResponseModel userToUserResponseModel(User user);
+    UserResponseModel userServiceModelToUserResponseModel(UserServiceModel userServiceModel);
 }

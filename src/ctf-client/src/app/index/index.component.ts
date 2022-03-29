@@ -1,3 +1,6 @@
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { AuthenticationService } from './../service/authentication.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,9 +10,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class IndexComponent implements OnInit {
 
-  constructor() { }
+  isLoggedIn!: boolean;
+  subscription : Subscription;
+
+  constructor(private authenticationService : AuthenticationService, private router : Router) {
+    this.subscription = this.authenticationService.isLoggedIn().subscribe(x => {
+      this.isLoggedIn = x;
+    })
+   }
 
   ngOnInit(): void {
+    if (this.isLoggedIn) {
+      this.router.navigateByUrl('/challenges')
+    } 
   }
 
 }

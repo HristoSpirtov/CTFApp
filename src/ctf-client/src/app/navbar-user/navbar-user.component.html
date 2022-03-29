@@ -11,16 +11,16 @@
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" routerLink="/users">Users</a>
+                    <a *ngIf="this.isLoggedIn" class="nav-link" routerLink="/users">Users</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" routerLink="/teams">Teams</a>
+                    <a *ngIf="this.isLoggedIn" class="nav-link" routerLink="/teams">Teams</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" routerLink="/scoreboard">Scoreboard</a>
+                    <a *ngIf="this.isLoggedIn" class="nav-link" routerLink="/scoreboard">Scoreboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" routerLink="/challenges">Challenges</a>
+                    <a *ngIf="this.isLoggedIn" class="nav-link" routerLink="/challenge">Challenges</a>
                 </li>
             </ul>
             <hr class="d-sm-flex d-md-flex d-lg-none">
@@ -38,9 +38,32 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a *ngIf="this.isLoggedIn" class="nav-link" routerLink="/admin">
+                        <fa-icon [icon]="adminIcon"></fa-icon>
+                        Admin Panel
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a *ngIf="this.isLoggedIn" class="nav-link" routerLink="/notifications">
+                        <fa-icon [icon]="notificationIcon"></fa-icon>
+                        Notifications
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a *ngIf="this.isLoggedIn" class="nav-link" routerLink="/team">
+                        <fa-icon [icon]="teamIcon"></fa-icon>
+                        Team
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a *ngIf="this.isLoggedIn" class="nav-link" routerLink="/profile">
+                        <fa-icon [icon]="profileIcon"></fa-icon>
+                        Profile
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a *ngIf="this.isLoggedIn" class="nav-link" routerLink="/" (click)="logout()">
-                        <fa-icon [icon]="signInIcon"></fa-icon>
-                        Logout
+                        <fa-icon [icon]="signoutIcon"></fa-icon> 
                     </a>
                 </li>
             </ul>

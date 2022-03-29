@@ -3,6 +3,7 @@ package com.ctf.ctfserver.filter;
 import com.ctf.ctfserver.constant.SecurityConstant;
 import com.ctf.ctfserver.domain.HttpResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
@@ -24,6 +25,8 @@ public class JWTAuthenticationEntryPoint extends Http403ForbiddenEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
 
+
+
         HttpResponse httpResponse = new HttpResponse(
                 new Date(),
                 FORBIDDEN.value(),
@@ -39,6 +42,4 @@ public class JWTAuthenticationEntryPoint extends Http403ForbiddenEntryPoint {
         mapper.writeValue(outputStream, httpResponse);
         outputStream.flush();
     }
-
-
 }

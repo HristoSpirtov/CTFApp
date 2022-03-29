@@ -1,7 +1,7 @@
 import { AuthenticationService } from './../service/authentication.service';
 import { Component, OnInit } from '@angular/core';
 
-import { faUserPlus, faSignInAlt  } from '@fortawesome/free-solid-svg-icons';
+import { faUserPlus, faSignInAlt, faBell, faUsers, faUserCircle, faWrench  } from '@fortawesome/free-solid-svg-icons';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons'; 
 
 @Component({
@@ -16,6 +16,10 @@ export class NavbarUserComponent implements OnInit {
   signInIcon = faSignInAlt;
   registerIcon = faUserPlus;
   signoutIcon = faSignOutAlt;
+  notificationIcon = faBell;
+  teamIcon = faUsers;
+  profileIcon = faUserCircle;
+  adminIcon = faWrench;
 
 
   constructor(private authenticationService : AuthenticationService) {

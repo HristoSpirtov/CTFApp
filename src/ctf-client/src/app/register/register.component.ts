@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs';
 import { NotificationType } from './../enum/notification-type.enum';
 import { HttpErrorResponse } from '@angular/common/http';
 import { User } from './../model/user';
@@ -19,19 +20,31 @@ export class RegisterComponent implements OnInit {
 
   showPassword! : boolean;
   inputType! : string;
+
+  isLoggedIn!: boolean;
+  subscription : Subscription
   
 
-  constructor(private router : Router, private authenticationService : AuthenticationService, private notificationService : NotificationService) { }
+  constructor(private router : Router, private authenticationService : AuthenticationService, private notificationService : NotificationService) {
+    this.subscription = this.authenticationService.isLoggedIn().subscribe(x => {
+      this.isLoggedIn = x;
+    })
+   }
 
   ngOnInit(): void {
+    if (this.isLoggedIn) {
+      this.router.navigateByUrl('/challenges')
+    } 
     this.showPassword = false;
     this.inputType = "password";
   }
 
+  
+
   onRegister(registerForm : any) {
     this.authenticationService.register(registerForm).subscribe({
-      next: (response : User) => {
-        this.seErrorNotification(NotificationType.SUCCESS, `A new user was created with username ${response.username}`)
+      next: (user : User) => {
+        this.seErrorNotification(NotificationType.SUCCESS, `A new user was created with username ${user.username}`)
       this.router.navigateByUrl('/login');
     },     
       error: (errorResponse: HttpErrorResponse) => {
@@ -43,7 +56,6 @@ export class RegisterComponent implements OnInit {
 
   private seErrorNotification(notificationType: NotificationType, message: string) : void {
     if (message) {
-      console.log("sdasdas")
       this.notificationService.notify(notificationType, message);
     } else {
       this.notificationService.notify(notificationType, 'An error occured. Please try again.');

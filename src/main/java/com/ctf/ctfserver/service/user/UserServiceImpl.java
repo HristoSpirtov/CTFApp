@@ -50,27 +50,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return new UserPrincipal(user);
     }
 
-//    @Override
-//    public User saveUser(User user) {
-//        log.info("Saving new user {} to the database", user.getName());
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        return userRepository.save(user);
-//    }
-
-//    @Override
-//    public Role saveRole(Role role) {
-//        log.info("Saving new role {} to the database", role.getName());
-//        return roleRepository.save(role);
-//    }
-
-//    @Override
-//    public void addRoleToUser(String username, String roleName) {
-//        log.info("Adding role {} to user {}", roleName, username);
-//        User user = userRepository.findByUsername(username);
-//        Role role = roleRepository.findByName(roleName);
-//        user.getRoles().add(role);
-//    }
-
     @Override
     public User findUserByUsername(String username) {
         log.info("Fetching user {}", username);
@@ -83,13 +62,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepository.findAll();
     }
 
-
-
     @Override
     public UserServiceModel register(UserServiceModel userServiceModel) {
 
         this.roleService.seedRolesInDb();
         if (this.userRepository.count() == 0) {
+
             userServiceModel.setRoles(this.roleService.finAllRoles());
         } else {
             userServiceModel.setRoles(new ArrayList<>());

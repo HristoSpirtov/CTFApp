@@ -2,6 +2,8 @@ package com.ctf.ctfserver.filter;
 
 
 import com.ctf.ctfserver.domain.UserPrincipal;
+import com.ctf.ctfserver.domain.models.mapper.UserMapper;
+import com.ctf.ctfserver.domain.models.response.UserResponseModel;
 import com.ctf.ctfserver.utility.JWTTokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.JSONPObject;
@@ -10,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.json.JSONParser;
+import org.mapstruct.Mapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -44,10 +47,12 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @SneakyThrows
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
-        Gson gson = new Gson();
-        Map map = gson.fromJson(request.getReader().readLine(), Map.class);
-        String username = (String) map.get("username");
-        String password = (String) map.get("password");
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+//        Gson gson = new Gson();
+//        Map map = gson.fromJson(request.getReader().readLine(), Map.class);
+//        String username = (String) map.get("username");
+//        String password = (String) map.get("password");
         log.info("Username is: {}", username);
         log.info("Password is: {}", password);
 
@@ -68,10 +73,12 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 //                HttpStatus.CREATED.getReasonPhrase().toUpperCase(),
 //                "User successfully logged in".toUpperCase());
 
+        UserResponseModel userResponseModel = UserMapper.INSTANCE.userToUserResponseModel(userPrincipal.getUser());
+
         response.setHeader(JWT_TOKEN_HEADER, accessToken);
         response.setHeader(JWT_REFRESH_TOKEN_HEADER, refreshToken);
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValue(response.getOutputStream(), userPrincipal.getUser());
+        objectMapper.writeValue(response.getOutputStream(), userResponseModel);
 
     }
 

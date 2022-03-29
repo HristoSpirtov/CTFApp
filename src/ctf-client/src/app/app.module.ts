@@ -1,4 +1,4 @@
-import { HomeComponent } from './home/home.component';
+import { ChallengeComponent } from './challenge/challenge.component';
 import { NotificationService } from './service/notification.service';
 import { AuthenticationGuard } from './guard/authentication.guard';
 import { NgModule } from '@angular/core';
@@ -21,14 +21,19 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
 import { NotificationModule } from './notification.module';
 import { FormsModule } from '@angular/forms';
+import { ScoreboardComponent } from './scoreboard/scoreboard.component';
 
 
 const routes: Routes = [
   { path: '', component: IndexComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'home', component:  HomeComponent},
+  { path: 'register', component: RegisterComponent} ,
+  { path: 'challenge', component:  ChallengeComponent, canActivate : [AuthenticationGuard]},
+  { path: 'scoreboard', component:  ScoreboardComponent, canActivate : [AuthenticationGuard]},
 ];
+
+
+
 
 
 @NgModule({
@@ -39,7 +44,8 @@ const routes: Routes = [
     LoginComponent,
     JumbotronComponent,
     RegisterComponent,
-    HomeComponent
+    ChallengeComponent,
+    ScoreboardComponent
   ],
   imports: [
     FormsModule,
