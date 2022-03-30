@@ -1,31 +1,81 @@
+import { Router } from '@angular/router';
+import { HeaderType } from './../enum/header-type.enum';
 import { AuthenticationService } from './../service/authentication.service';
 import { Injectable } from '@angular/core';
 import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
-  HttpInterceptor
+  HttpInterceptor,
+  HttpErrorResponse,
+  HttpResponse
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, BehaviorSubject, switchMap, filter, take, map, throwError } from 'rxjs';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  constructor(private authenticationService : AuthenticationService) {}
+  private isRefreshing = false;
+  private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+
+  constructor(private authenticationService : AuthenticationService, private router : Router) {}
 
   intercept(httpRequest: HttpRequest<any>, HttpHandler: HttpHandler) : Observable<HttpEvent<any>> {
-    if (httpRequest.url.includes(`${this.authenticationService.host}/api/login)`)) {
+    if (httpRequest.url.includes('http://localhost:8080/api/login')) {
       return HttpHandler.handle(httpRequest);
     }
-    if (httpRequest.url.includes(`${this.authenticationService.host}/api/register)`)) {
+    if (httpRequest.url.includes('http://localhost:8080/api/register')) {
       return HttpHandler.handle(httpRequest);
     }
-
+    if (httpRequest.url.includes('http://localhost:8080/api/token/refresh')) {
+      return HttpHandler.handle(httpRequest);
+    }
+    
+    
     const token = this.authenticationService.getToken();
-    //have to clone the request because it is imutable
-    const request = httpRequest.clone({
-      headers: httpRequest.headers.set('Authorization', 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJDVEZhIGNsaWVudCIsInN1YiI6ImgiLCJpc3MiOiJDVEZhIiwiZXhwIjoxNjQ4NTc3ODUzLCJpYXQiOjE2NDg1Nzc3OTMsImF1dGhvcml0aWVzIjpbIlJPTEVfUk9PVCIsIlJPTEVfVVNFUiJdfQ.8Yl1EaXsKE1uxpYzLVVG3l7lIlXHBCJgf0DmUnsTkkyHCeL55PcT5duPx8mbuIkqFx4GjqpANEEbC_0W1JhKAA')
-    });
-    return HttpHandler.handle(request);  
+    let authReq = httpRequest; 
+    if (token != null) {
+      authReq = httpRequest.clone({ setHeaders: { Authorization: `Bearer ${token}` }});
+    }
+    return HttpHandler.handle(authReq).pipe(catchError(error  => {
+      if (error instanceof HttpErrorResponse && (!authReq.url.includes('/api/login') || !authReq.url.includes('/api/register')) && error.status === 401) {
+        return this.handle401Error(authReq, HttpHandler);
+      }
+      return throwError(error.message);
+    }));  
+  }
+  private handle401Error(request: HttpRequest<any>, next: HttpHandler) {
+    if (!this.isRefreshing) {
+      this.isRefreshing = true;
+      this.refreshTokenSubject.next(null);
+      const token = this.authenticationService.getRefreshToken();
+      if (token)
+        return this.authenticationService.refreshToken(token).pipe(
+          switchMap((response: HttpResponse<any>) => {
+            this.isRefreshing = false;
+            this.authenticationService.saveJwtToken(response.headers.get(HeaderType.JWT_TOKEN)!);
+            this.authenticationService.saveRefreshToken(response.headers.get(HeaderType.REFRESH_TOKEN)!);
+            this.refreshTokenSubject.next(response.headers.get(HeaderType.JWT_TOKEN)!);
+            
+            return next.handle(this.addTokenHeader(request, response.headers.get(HeaderType.JWT_TOKEN)!));
+          }),
+          catchError( err => {
+            this.isRefreshing = false;
+            this.authenticationService.logout();
+            this.router.navigateByUrl('/login');
+            return throwError(err.message);
+          })
+        );
+    }
+    return this.refreshTokenSubject.pipe(
+      filter(token => token !== null),
+      take(1),
+      switchMap((token) => next.handle(this.addTokenHeader(request, token)))
+    );
+  }
+  private addTokenHeader(request: HttpRequest<any>, token: string) {
+    return request.clone({ headers: request.headers.set('Authorization','Bearer ' + token) });
   }
 }
+
+

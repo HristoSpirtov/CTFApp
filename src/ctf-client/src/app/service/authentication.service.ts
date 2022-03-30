@@ -1,8 +1,8 @@
 import { HeaderType } from './../enum/header-type.enum';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { HttpClient, HttpResponse } from '@angular/common/http' 
-import { BehaviorSubject, map, Observable, pipe } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http' 
+import { BehaviorSubject, map, Observable, pipe, Subscription } from 'rxjs';
 import { User } from '../model/user';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
@@ -13,7 +13,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 export class AuthenticationService {
   private _host;
   private jwtHelper;
-  private isLoginSubject;
+  public isLoginSubject;
   
 
   constructor(private http: HttpClient) {
@@ -22,22 +22,15 @@ export class AuthenticationService {
     this.isLoginSubject = new BehaviorSubject<boolean>(this.isUserLoggedIn());
   }
 
-  public login(loginForm: any) : Observable<User> {
-    this.http.post<User>(`${this.host}/api/login`, loginForm, {observe: 'response'}).subscribe({
-      next: (response : HttpResponse<User>) => {
-        const token = response.headers.get(HeaderType.JWT_TOKEN)!;
-        const refreshToken = response.headers.get(HeaderType.REFRESH_TOKEN)!;
-        this.saveTokens(token, refreshToken);
-        this.saveUser(response.body!);
-        this.isLoginSubject.next(true);
-    },     
-      error: () => {
-        this.isLoginSubject.next(false);
-    }});
-
-    return this.http.post<User>(`${this.host}/api/login`, loginForm, {observe: 'response'}).pipe(map((user : HttpResponse<User>) => user.body!));
+  public login(loginForm: any) : Observable<HttpResponse<User>> {
+    return this.http.post<User>(`${this.host}/api/login`, loginForm, {observe: 'response'});
   }
 
+  public refreshToken(token : string) : Observable<HttpResponse<any>> {
+    const headers : HttpHeaders = new HttpHeaders({'Authorization': `Bearer ${token}`});
+
+    return this.http.get(`${this.host}/api/token/refresh`, {headers, observe: 'response' })
+  }
 
   public isLoggedIn() : Observable<boolean> {
     return this.isLoginSubject.asObservable();
@@ -67,11 +60,7 @@ export class AuthenticationService {
   private isUserLoggedIn() : boolean {
     let token : string | null = this.getToken();
     if (token !== null && token !== undefined) {   
-      if (this.jwtHelper.decodeToken(token).sub !== null || '') {
-        if (!this.jwtHelper.isTokenExpired(token)) {
-          return true;
-        }
-      }
+      return true;
     } 
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -83,13 +72,14 @@ export class AuthenticationService {
     return this._host;
   }
 
-  private saveTokens(token : string, refreshToken : string) {
+  public saveJwtToken(token : string) {
     localStorage.setItem('token', token);
-    localStorage.setItem('refresh-token', refreshToken);
-
-
   }
-  private saveUser(user : User) {
+
+  public saveRefreshToken(refreshToken : string) {
+    localStorage.setItem('refresh-token', refreshToken);
+  }
+  public saveUser(user : User) {
     localStorage.setItem('user', JSON.stringify(user));
   }
 }

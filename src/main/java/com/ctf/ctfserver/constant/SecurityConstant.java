@@ -1,8 +1,8 @@
 package com.ctf.ctfserver.constant;
 
 public class SecurityConstant {
-    public static final long JWT_EXPIRATION_TIME = 1 * 60 * 1000;  // 5 min expressed in milliseconds
-    public static final long JWT_REFRESH_TOKEN_EXPIRATION_TIME = 5 * 60 * 1000;  // 5 min expressed in milliseconds
+    public static final long JWT_EXPIRATION_TIME = 1 * 10 * 1000;  // 5 min expressed in milliseconds
+    public static final long JWT_REFRESH_TOKEN_EXPIRATION_TIME = 1 * 40 * 1000;  // 5 min expressed in milliseconds
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String JWT_TOKEN_HEADER = "Jwt-Token";
     public static final String JWT_REFRESH_TOKEN_HEADER = "Jwt-Refresh-Token";

@@ -1,6 +1,7 @@
+import { HeaderType } from './../enum/header-type.enum';
 import { NotificationType } from './../enum/notification-type.enum';
 import { User } from './../model/user';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { NotificationService } from './../service/notification.service';
 import { AuthenticationService } from './../service/authentication.service';
 import { Router } from '@angular/router';
@@ -36,17 +37,26 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   onLogin(loginForm: any) {
+    
     this.authenticationService.login(loginForm).pipe(take(1)).subscribe({
-        next: (user : User) => {
-          this.setNotification(NotificationType.SUCCESS,  `User ${user.username} successfuly logged in`);
+        next: (response : HttpResponse<User>) => {
+          const token = response.headers.get(HeaderType.JWT_TOKEN)!;
+          const refreshToken = response.headers.get(HeaderType.REFRESH_TOKEN)!;
+          this.authenticationService.saveJwtToken(token);
+          this.authenticationService.saveRefreshToken(refreshToken);
+          this.authenticationService.saveUser(response.body!);
+          this.authenticationService.isLoginSubject.next(true);
+          this.setNotification(NotificationType.SUCCESS,  `User ${ response.body?.username } successfuly logged in`); 
           this.router.navigateByUrl('/challenge');
+          
       },     
         error: (errorResponse: HttpErrorResponse) => {
-          console.log(errorResponse);
+          this.authenticationService.isLoginSubject.next(false);
           this.setNotification(NotificationType.ERROR, errorResponse.error.message);
       }
     });
   }
+
 
   private setNotification(notificationType: NotificationType, message: string) : void {
     if (message) {

@@ -12,7 +12,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -52,6 +51,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             String authorizationHeader = request.getHeader(AUTHORIZATION);
             if (authorizationHeader == null || !authorizationHeader.startsWith(TOKEN_PREFIX) ||
                     request.getServletPath().equals("/api/login") ||
+                    request.getServletPath().equals("/api/register") ||
                     request.getServletPath().equals("/api/token/refresh")) {
 
                 filterChain.doFilter(request, response);
@@ -70,6 +70,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
                 }
 
             } catch (Exception e) {
+                SecurityContextHolder.clearContext();
                 HttpResponse httpResponse = new HttpResponse(
                         new Date(),
                         UNAUTHORIZED.value(),

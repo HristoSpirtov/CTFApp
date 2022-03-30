@@ -44,15 +44,17 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private final JWTTokenProvider jwtTokenProvider;
 
 
-    @SneakyThrows
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-//        Gson gson = new Gson();
-//        Map map = gson.fromJson(request.getReader().readLine(), Map.class);
-//        String username = (String) map.get("username");
-//        String password = (String) map.get("password");
+        Gson gson = new Gson();
+        Map map = null;
+        try {
+            map = gson.fromJson(request.getReader().readLine(), Map.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String username = (String) map.get("username");
+        String password = (String) map.get("password");
         log.info("Username is: {}", username);
         log.info("Password is: {}", password);
 
@@ -66,12 +68,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         String accessToken = jwtTokenProvider.generateJWTToken(userPrincipal);
         String refreshToken = jwtTokenProvider.generateJWTRefreshToken(userPrincipal);
-//        HttpResponse httpResponse = new HttpResponse(
-//                new Date(),
-//                HttpStatus.CREATED.value(),
-//                HttpStatus.CREATED,
-//                HttpStatus.CREATED.getReasonPhrase().toUpperCase(),
-//                "User successfully logged in".toUpperCase());
 
         UserResponseModel userResponseModel = UserMapper.INSTANCE.userToUserResponseModel(userPrincipal.getUser());
 

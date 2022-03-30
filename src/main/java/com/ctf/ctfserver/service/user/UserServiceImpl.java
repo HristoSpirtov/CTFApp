@@ -67,7 +67,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         this.roleService.seedRolesInDb();
         if (this.userRepository.count() == 0) {
-
             userServiceModel.setRoles(this.roleService.finAllRoles());
         } else {
             userServiceModel.setRoles(new ArrayList<>());
