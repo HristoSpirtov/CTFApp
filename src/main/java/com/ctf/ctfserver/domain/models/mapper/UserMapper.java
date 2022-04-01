@@ -6,6 +6,7 @@ import com.ctf.ctfserver.domain.models.response.UserResponseModel;
 import com.ctf.ctfserver.domain.models.service.UserServiceModel;
 import org.mapstruct.Mapper;
 
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper

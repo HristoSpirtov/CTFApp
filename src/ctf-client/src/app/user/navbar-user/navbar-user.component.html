@@ -1,0 +1,73 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a routerLink="/" class="navbar-brand">
+            CTFa
+        </a>
+        <!-- refactor to hide when admin module is loaded -->
+        <!-- to be refactored with ngx bootstrap Collapse -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="base-navbars" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <!--  -->
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a *ngIf="this.isLoggedIn" class="nav-link" routerLink="/users">Users</a>
+                </li>
+                <li class="nav-item">
+                    <a *ngIf="this.isLoggedIn" class="nav-link" routerLink="/teams">Teams</a>
+                </li>
+                <li class="nav-item">
+                    <a *ngIf="this.isLoggedIn" class="nav-link" routerLink="/scoreboard">Scoreboard</a>
+                </li>
+                <li class="nav-item">
+                    <a *ngIf="this.isLoggedIn" class="nav-link" routerLink="/challenges">Challenges</a>
+                </li>
+            </ul>
+            <hr class="d-sm-flex d-md-flex d-lg-none">
+            <ul class="navbar-nav ml-md-auto d-block d-sm-flex d-md-flex">
+                <li class="nav-item">
+                    <a *ngIf="!this.isLoggedIn" class="nav-link" routerLink="/register">
+                        <fa-icon [icon]="registerIcon"></fa-icon>
+                        Register                   
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a *ngIf="!this.isLoggedIn" class="nav-link" routerLink="/login">
+                        <fa-icon [icon]="signInIcon"></fa-icon>
+                        Login
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a *ngIf="this.isAdmin()" class="nav-link" routerLink="/admin">
+                        <fa-icon [icon]="adminIcon"></fa-icon>
+                        Admin Panel
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a *ngIf="this.isLoggedIn" class="nav-link" routerLink="/notifications">
+                        <fa-icon [icon]="notificationIcon"></fa-icon>
+                        Notifications
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a *ngIf="this.isLoggedIn" class="nav-link" routerLink="/team">
+                        <fa-icon [icon]="teamIcon"></fa-icon>
+                        Team
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a *ngIf="this.isLoggedIn" class="nav-link" routerLink="/profile">
+                        <fa-icon [icon]="profileIcon"></fa-icon>
+                        Profile
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a *ngIf="this.isLoggedIn" class="nav-link" routerLink="/" (click)="logout()">
+                        <fa-icon [icon]="signoutIcon"></fa-icon> 
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
