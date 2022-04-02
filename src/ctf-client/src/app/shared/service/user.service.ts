@@ -18,5 +18,9 @@ export class UserService {
     return this.http.get<User[]>(`${this.host}/api/users`)
   }
 
+  public deleteUsers(selectedUsers : User[]) : Observable<any> {
+    return this.http.post<any>(`${this.host}/api/users/delete`, selectedUsers)
+  }
+
 
 }

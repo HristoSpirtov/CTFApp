@@ -1,4 +1,122 @@
 <admin-jumbotron>
     Users
-    <add></add>
+    <a routerLink="/admin/users/new" tooltip="Create Team" placement="top" style="color: inherite;">
+        <fa-icon [icon]="addIcon"></fa-icon>
+    </a>
 </admin-jumbotron>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <form method="GET" class="form-inline">
+                <div class="form-group col-md-2">
+                    <select class="form-control custom-select w-100" id="field" name="field">
+                        <option value="name">Name</option>
+                        <option value="id">ID</option>
+                        <option value="email">Email</option>
+                        <option value="affiliation">Affiliation</option>
+                        <option value="website">Website</option>
+                        <option value="ip">IP Address</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-8">
+                    <input class="form-control w-100" id="q" name="q" placeholder="Search for matching users"
+                        type="text" value="">
+                </div>
+                <div class="form-group col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <fa-icon [icon]="searchIcon"></fa-icon>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="float-right pb-3">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-secondary" title="" tooltip="Edit Users"
+                        placement="top" id="users-edit-button" data-original-title="Edit Users">
+                        <fa-icon [icon]="editIcon"></fa-icon>
+                    </button>
+                    <button type="button" class="btn btn-outline-danger" title="" tooltip="Delete Users" placement="top"
+                        id="users-delete-button" data-original-title="Delete Users" (click)="openModal(template)">
+                        <fa-icon [icon]="deleteIcon"></fa-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table id="userboard" class="table table-striped border">
+                <thead>
+                    <tr>
+                        <th class="border-right"></th>
+                        <th class="sort-col text-center"><b>No</b> <i class="fas fa-sort"></i></th>
+                        <th class="sort-col text-center"><b>User</b> <i class="fas fa-sort"></i></th>
+                        <th class="d-md-table-cell d-lg-table-cell sort-col text-center"><b>Email</b></th>
+                        <th class="sort-col text-center"><b>School</b></th>
+                        <th class="sort-col text-center px-0"><b>Admin</b></th>
+                        <th class="sort-col text-center px-0"><b>Verified</b></th>
+                        <th class="sort-col text-center px-0"><b>Hidden</b></th>
+                        <th class="sort-col text-center px-0"><b>Banned</b></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let user of (users$ | async) index as i">
+                        <td class="border-right" data-checkbox="">
+                            <div *ngIf="user.roles.length != 2" class="form-check text-center">
+                                <input ngModel #name="ngModel" name="id" type="checkbox" class="form-check-input"
+                                    (change)="radioChange(name.value, user)">
+                            </div>
+                        </td>
+                        <td class="team-id text-center" value="1">
+                            {{i + 1}}
+                        </td>
+                        <td class="team-name" value="admin">
+                            <a routerLink="">
+                                {{ user.username }}
+                            </a>
+                        </td>
+                        <td class="d-none d-md-table-cell d-lg-table-cell" value="">
+                            <a routerLink="">{{ user.email }}</a>
+                        </td>
+                        <td class="text-center" value="">
+                            <span>{{user.school}}</span>
+                        </td>
+                        <td class="d-md-table-cell d-lg-table-cell text-center" value="admin">
+                            <span *ngIf="user.roles.length == 2" class="badge badge-primary">admin</span>
+                        </td>
+                        <td class="d-md-table-cell d-lg-table-cell text-center" value="False">
+                            <span *ngIf="user.roles.length != 2 && user.verified"
+                                class="badge badge-success">verified</span>
+                        </td>
+                        <td class="d-md-table-cell d-lg-table-cell text-center" value="True">
+                            <span *ngIf="user.roles.length != 2 && user.hidden" class="badge badge-danger">hidden</span>
+                        </td>
+                        <td class="d-md-table-cell d-lg-table-cell text-center" value="False">
+                            <span *ngIf="user.roles.length != 2 && user.banned" class="badge badge-danger">banned</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <ng-template #template>
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete Users</h5>
+                    <button type="button" class="btn-close close pull-right" aria-label="Close"
+                        (click)="modalRef?.hide()">
+                        <span aria-hidden="true" class="visually-hidden">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete {{ selectedUsers.length }} users?</p>
+                </div>
+                <div class="modal-footer"> 
+                    <button class="btn btn-danger" (click)="modalRef?.hide()">No</button>
+                    <button class="btn btn-primary" (click)="deleteUsers()">Yes</button>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+</div>

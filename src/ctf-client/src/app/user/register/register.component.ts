@@ -41,7 +41,7 @@ export class RegisterComponent implements OnInit {
 
   
 
-  onRegister(registerForm : any) {
+  onRegister(registerForm : User) {
     this.authenticationService.register(registerForm).subscribe({
       next: (user : User) => {
         this.seErrorNotification(NotificationType.SUCCESS, `A new user was created with username ${user.username}`)

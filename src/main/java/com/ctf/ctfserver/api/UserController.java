@@ -1,8 +1,10 @@
 package com.ctf.ctfserver.api;
 
 
+import com.ctf.ctfserver.domain.HttpResponse;
 import com.ctf.ctfserver.domain.UserPrincipal;
 import com.ctf.ctfserver.domain.entities.User;
+import com.ctf.ctfserver.domain.models.binding.UserDeleteBindingModel;
 import com.ctf.ctfserver.domain.models.mapper.UserMapper;
 import com.ctf.ctfserver.domain.models.binding.UserRegisterBindingModel;
 import com.ctf.ctfserver.domain.models.response.UserResponseModel;
@@ -15,7 +17,6 @@ import com.ctf.ctfserver.utility.JWTTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,11 +36,26 @@ public class UserController extends ExceptionHandling {
     private final JWTTokenProvider jwtTokenProvider;
 
     @GetMapping("/users")
+    @PreAuthorize("hasRole('ROLE_ROOT')")
     public ResponseEntity<List<User>>getUsers() throws UserNotFoundException {
 
         return ResponseEntity.ok().body(userService.getUsers());
     }
 
+
+    @PostMapping("/users/delete")
+    @PreAuthorize("hasRole('ROLE_ROOT')")
+    public ResponseEntity<HttpResponse> deleteUser(@RequestBody final List<UserDeleteBindingModel> users) throws UserNotFoundException, UsernameExistsException {
+        List<UserServiceModel> userServiceModels = UserMapper.INSTANCE
+                .ListUserDeleteBindingToListUserServiceModel(users);
+        this.userService.deleteUsers(userServiceModels);
+
+        return new ResponseEntity<>(new HttpResponse(new Date(),
+                HttpStatus.OK.value(),
+                HttpStatus.OK,
+                HttpStatus.OK.getReasonPhrase().toUpperCase(),
+                USERS_DELETED_SUCCESSFULLY.toUpperCase()), HttpStatus.OK);
+    }
 
     @PostMapping("/register")
     public ResponseEntity<UserResponseModel> register(@RequestBody UserRegisterBindingModel userRegisterBindingModel) throws UserNotFoundException, UsernameExistsException {

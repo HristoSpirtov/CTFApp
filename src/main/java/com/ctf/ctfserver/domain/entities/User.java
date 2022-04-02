@@ -39,6 +39,13 @@ public class User extends BaseEntity  {
             unique = true)
     private String email;
 
+    @Column(name = "verified", nullable = false)
+    private boolean isVerified;
+    @Column(name = "hidden", nullable = false)
+    private boolean isHidden;
+    @Column(name = "banned", nullable = false)
+    private boolean isBanned;
+
     @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",

@@ -39,6 +39,8 @@ public class ExceptionHandling implements ErrorController { //implement error co
     private static final String ERROR_PROCESSING_FILE = "Error occurred while processing file";
     private static final String NOT_ENOUGH_PERMISSION = "You do not have enough permission";
     public static final String ERROR_PATH = "/error";
+    public static final String USERS_DELETED_SUCCESSFULLY = "Users were successfully deleted";
+
 
 
     @ExceptionHandler(DisabledException.class)

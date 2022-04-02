@@ -73,9 +73,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             userServiceModel.getRoles().add(this.roleService.findByRole("ROLE_USER"));
         }
         User user = UserMapper.INSTANCE.userServiceModelToUser(userServiceModel);
+        user.setVerified(true);
         user.setPassword(encodePassword(userServiceModel.getPassword()));
 
         return UserMapper.INSTANCE.userToUserServiceModel(this.userRepository.save(user));
+    }
+
+    @Override
+    public void deleteUsers(List<UserServiceModel> userServiceModels) {
+        userServiceModels.forEach(user -> this.userRepository.deleteById(user.getId()));
+
     }
 
     private String encodePassword(String password) {

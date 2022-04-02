@@ -1,4 +1,3 @@
-import { AuthenticationGuard } from '../shared/guard/authentication.guard';
 import { AdminGuard } from '../shared/guard/admin.guard';
 import { StatisticsComponent } from './statistics/statistics.component';
 import { RouterModule, Routes } from '@angular/router';
@@ -8,6 +7,7 @@ import { AdminComponent } from '../admin/admin/admin.component';
 import { NavbarAdminComponent } from './navbar-admin/navbar-admin.component';
 import { AdminUsersComponent } from '../admin/admin-users/admin-users.component';
 import { SharedModule } from '../shared/shared.module';
+import { NewUserComponent } from './new-user/new-user.component';
 
 
 
@@ -17,7 +17,7 @@ const routes : Routes = [
     { path : '', redirectTo : 'statistics' },
     { path : 'statistics', component : StatisticsComponent },
     { path : 'users', component : AdminUsersComponent },
-
+    { path : 'users/new', component : NewUserComponent },
   ]}
 ]
 
