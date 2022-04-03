@@ -74,6 +74,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
         User user = UserMapper.INSTANCE.userServiceModelToUser(userServiceModel);
         user.setVerified(true);
+        user.setHidden(false);
+        user.setBanned(true);
         user.setPassword(encodePassword(userServiceModel.getPassword()));
 
         return UserMapper.INSTANCE.userToUserServiceModel(this.userRepository.save(user));
@@ -83,6 +85,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public void deleteUsers(List<UserServiceModel> userServiceModels) {
         userServiceModels.forEach(user -> this.userRepository.deleteById(user.getId()));
 
+    }
+
+    @Override
+    public void editUsers(List<UserServiceModel> userServiceModels) {
+        userServiceModels.forEach(user -> {
+            this.userRepository.findById(user.getId()).
+                    ifPresent(found -> {
+                        found.setHidden(user.isHidden());
+                        found.setBanned(user.isBanned());
+                    });
+        });
     }
 
     private String encodePassword(String password) {

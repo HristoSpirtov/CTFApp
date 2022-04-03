@@ -1,10 +1,10 @@
-import { HttpResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { NotificationType } from './../../shared/enum/notification-type.enum';
 import { NotificationService } from './../../shared/service/notification.service';
-import { Observable } from 'rxjs';
-import { faPencilAlt, faPlusCircle, faSearch, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { Observable, Subscription } from 'rxjs';
+import { faPencilAlt, faPlusCircle, faSort, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { UserService } from './../../shared/service/user.service';
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, OnDestroy } from '@angular/core';
 import { User } from 'src/app/shared/model/user';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
@@ -13,32 +13,60 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
   templateUrl: './admin-users.component.html',
   styleUrls: ['./admin-users.component.css']
 })
-export class AdminUsersComponent implements OnInit {
+export class AdminUsersComponent implements OnInit, OnDestroy {
+
+  //TODO: implement sorting and pagination
 
   modalRef?: BsModalRef;
 
   addIcon = faPlusCircle;
-  searchIcon = faSearch;
   deleteIcon = faTrashAlt;
   editIcon = faPencilAlt;
+  sortIcon = faSort;
 
-  users$! : Observable<User[]>
+  users : User[]
+  filteredUsers! : User[]
+  subscription! : Subscription;
   selectedUsers! : User[];
 
 
 
-  constructor(private userService : UserService, private modalService: BsModalService, private notificationService : NotificationService) {
+  constructor(private userService : UserService, private modalService: BsModalService, private notificationService : NotificationService, private router : Router) {
+    this.users = [];
     
   }
+  
 
-  openModal(template: TemplateRef<any>) {
+  filter(query : string, filterBy : string) {
+    if(filterBy == "username") {
+      this.filteredUsers = (query) ? this.users.filter(u => u.username.toLowerCase().includes(query.toLowerCase())) : this.users;
+    } else {
+      this.filteredUsers = (query) ? this.users.filter(u => u.school.toLowerCase().includes(query.toLowerCase())) : this.users;
+    }
+      
+  }
+
+  openDeleteModal(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template);
+  }
+
+  openEditModal(template: TemplateRef<any>) {
     this.modalRef = this.modalService.show(template);
   }
 
   ngOnInit(): void {
     this.selectedUsers = [];
-    this.users$ = this.userService.getUsers();
+    this.subscription = this.userService.getUsers().subscribe(users => {
+      users.forEach( user => {
+          this.users.push(user);
+      })
+      this.filteredUsers = this.users;
+    });
 
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   radioChange(isCheked : boolean, user : User) {
@@ -57,14 +85,40 @@ export class AdminUsersComponent implements OnInit {
   deleteUsers() {
     if(this.selectedUsers.length > 0) {
       this.userService.deleteUsers(this.selectedUsers).subscribe(response => {
-        this.users$ = this.userService.getUsers();
+        // this.userService.getUsers().subscribe(users => this.users = users);
         this.modalRef?.hide();
         this.notificationService.notify(NotificationType.SUCCESS, response.message);
+        this.selectedUsers = [];
+        //hack to refresh component
+        this.router.navigateByUrl('/admin', { skipLocationChange: true }).then(() => {
+          this.router.navigate(['/admin/users']);
+        });
+        
       });
+      
     }
   }
 
-
-
-
+  editUsers(loginForm: any) {
+    let cloned : User[] = [] ;
+    this.selectedUsers.forEach(u => cloned.push(Object.assign({}, u)));
+    if(this.selectedUsers.length > 0) {
+      if(loginForm.verified != "" || loginForm.hidden != "" || loginForm.banned != "") {
+        cloned.forEach((user, index) => {
+          cloned[index].banned =  loginForm.banned !="" ?  loginForm.banned : user.banned;
+          cloned[index].hidden = loginForm.hidden !="" ?  loginForm.hidden : user.hidden;
+        })
+        this.userService.editUsers(cloned).subscribe(response => {
+          // this.userService.getUsers().subscribe(users => {this.users = users});
+          this.modalRef?.hide();
+          this.notificationService.notify(NotificationType.SUCCESS, response.message);
+          this.selectedUsers = [];
+          //hack to refresh component
+          this.router.navigateByUrl('/admin', { skipLocationChange: true }).then(() => {
+            this.router.navigate(['/admin/users']);
+          });
+        });
+      }
+    }
+  }
 }

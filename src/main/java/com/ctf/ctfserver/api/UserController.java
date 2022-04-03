@@ -4,7 +4,7 @@ package com.ctf.ctfserver.api;
 import com.ctf.ctfserver.domain.HttpResponse;
 import com.ctf.ctfserver.domain.UserPrincipal;
 import com.ctf.ctfserver.domain.entities.User;
-import com.ctf.ctfserver.domain.models.binding.UserDeleteBindingModel;
+import com.ctf.ctfserver.domain.models.binding.UsersEditOrDeleteBindingModel;
 import com.ctf.ctfserver.domain.models.mapper.UserMapper;
 import com.ctf.ctfserver.domain.models.binding.UserRegisterBindingModel;
 import com.ctf.ctfserver.domain.models.response.UserResponseModel;
@@ -45,7 +45,7 @@ public class UserController extends ExceptionHandling {
 
     @PostMapping("/users/delete")
     @PreAuthorize("hasRole('ROLE_ROOT')")
-    public ResponseEntity<HttpResponse> deleteUser(@RequestBody final List<UserDeleteBindingModel> users) throws UserNotFoundException, UsernameExistsException {
+    public ResponseEntity<HttpResponse> deleteUsers(@RequestBody final List<UsersEditOrDeleteBindingModel> users) throws UserNotFoundException, UsernameExistsException {
         List<UserServiceModel> userServiceModels = UserMapper.INSTANCE
                 .ListUserDeleteBindingToListUserServiceModel(users);
         this.userService.deleteUsers(userServiceModels);
@@ -55,6 +55,20 @@ public class UserController extends ExceptionHandling {
                 HttpStatus.OK,
                 HttpStatus.OK.getReasonPhrase().toUpperCase(),
                 USERS_DELETED_SUCCESSFULLY.toUpperCase()), HttpStatus.OK);
+    }
+
+    @PatchMapping("/users/edit")
+    @PreAuthorize("hasRole('ROLE_ROOT')")
+    public ResponseEntity<HttpResponse> editUsers(@RequestBody final List<UsersEditOrDeleteBindingModel> users) throws UserNotFoundException, UsernameExistsException {
+        List<UserServiceModel> userServiceModels = UserMapper.INSTANCE
+                .ListUserDeleteBindingToListUserServiceModel(users);
+        this.userService.editUsers(userServiceModels);
+
+        return new ResponseEntity<>(new HttpResponse(new Date(),
+                HttpStatus.OK.value(),
+                HttpStatus.OK,
+                HttpStatus.OK.getReasonPhrase().toUpperCase(),
+                USERS_EDITED_SUCCESSFULLY.toUpperCase()), HttpStatus.OK);
     }
 
     @PostMapping("/register")

@@ -8,7 +8,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserDeleteBindingModel {
+public class UsersEditOrDeleteBindingModel {
     private String id;
     private String name;
     private String school;

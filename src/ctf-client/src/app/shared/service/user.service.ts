@@ -22,5 +22,9 @@ export class UserService {
     return this.http.post<any>(`${this.host}/api/users/delete`, selectedUsers)
   }
 
+  public editUsers(selectedUsers : User[]) : Observable<any> {
+    return this.http.patch<any>(`${this.host}/api/users/edit`, selectedUsers);
+  }
+
 
 }

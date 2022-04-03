@@ -2,6 +2,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 @import "~angular-notifier/styles";
 
+@import 'prismjs/themes/prism.css';
+@import 'prismjs/plugins/line-numbers/prism-line-numbers.css';
+@import 'prismjs/plugins/line-highlight/prism-line-highlight.css';
+
+
+
 a {
     color: #337ab7;
 }
@@ -58,6 +64,13 @@ input.ng-invalid.ng-touched {
     background-color: #fff;
     transition: background-color .3s, border-color .3s;
 }
+
+
+.modal-content  {
+
+    border-radius: 0px !important; 
+}
+
 
 
 

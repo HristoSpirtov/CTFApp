@@ -6,29 +6,15 @@
 </admin-jumbotron>
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
-            <form method="GET" class="form-inline">
-                <div class="form-group col-md-2">
-                    <select class="form-control custom-select w-100" id="field" name="field">
-                        <option value="name">Name</option>
-                        <option value="id">ID</option>
-                        <option value="email">Email</option>
-                        <option value="affiliation">Affiliation</option>
-                        <option value="website">Website</option>
-                        <option value="ip">IP Address</option>
-                    </select>
-                </div>
-                <div class="form-group col-md-8">
-                    <input class="form-control w-100" id="q" name="q" placeholder="Search for matching users"
-                        type="text" value="">
-                </div>
-                <div class="form-group col-md-2">
-                    <button type="submit" class="btn btn-primary w-100">
-                        <fa-icon [icon]="searchIcon"></fa-icon>
-                    </button>
-                </div>
-            </form>
+        <div class="col-md-2">
+            <select #filterBy class="form-control w-100" id="field" name="field">
+                <option value="username">username</option>
+                <option value="school">school</option>
+            </select>
         </div>
+        <div class="col-md-10">
+            <input #query class="form-control w-100" placeholder="Search for matching users" (keyup)="filter(query.value, filterBy.value)">
+        </div> 
     </div>
     <hr>
     <div class="row">
@@ -36,11 +22,11 @@
             <div class="float-right pb-3">
                 <div class="btn-group" role="group">
                     <button type="button" class="btn btn-outline-secondary" title="" tooltip="Edit Users"
-                        placement="top" id="users-edit-button" data-original-title="Edit Users">
+                        placement="top" id="users-edit-button" data-original-title="Edit Users" (click)="openEditModal(edit)">
                         <fa-icon [icon]="editIcon"></fa-icon>
                     </button>
                     <button type="button" class="btn btn-outline-danger" title="" tooltip="Delete Users" placement="top"
-                        id="users-delete-button" data-original-title="Delete Users" (click)="openModal(template)">
+                        id="users-delete-button" data-original-title="Delete Users" (click)="openDeleteModal(delete)">
                         <fa-icon [icon]="deleteIcon"></fa-icon>
                     </button>
                 </div>
@@ -52,56 +38,56 @@
             <table id="userboard" class="table table-striped border">
                 <thead>
                     <tr>
-                        <th class="border-right"></th>
-                        <th class="sort-col text-center"><b>No</b> <i class="fas fa-sort"></i></th>
-                        <th class="sort-col text-center"><b>User</b> <i class="fas fa-sort"></i></th>
-                        <th class="d-md-table-cell d-lg-table-cell sort-col text-center"><b>Email</b></th>
-                        <th class="sort-col text-center"><b>School</b></th>
-                        <th class="sort-col text-center px-0"><b>Admin</b></th>
-                        <th class="sort-col text-center px-0"><b>Verified</b></th>
-                        <th class="sort-col text-center px-0"><b>Hidden</b></th>
-                        <th class="sort-col text-center px-0"><b>Banned</b></th>
+                        <th class="border-right col-md-1"></th>
+                        <th class="sort-col text-center col-md-1"><b>No</b> <i class="fas fa-sort"></i></th>
+                        <th class="sort-col text-center col-md-2"><b>User <fa-icon [icon]="sortIcon"></fa-icon></b></th>
+                        <th class="d-md-table-cell d-lg-table-cell sort-col text-center col-md-2"><b>Email <fa-icon [icon]="sortIcon"></fa-icon></b></th>
+                        <th class="sort-col text-center col-md-2"><b>School <fa-icon [icon]="sortIcon"></fa-icon></b></th>
+                        <th class="sort-col text-center px-0 col-md-1"><b>Admin <fa-icon [icon]="sortIcon"></fa-icon></b></th>
+                        <th class="sort-col text-center px-0 col-md-1"><b>Verified <fa-icon [icon]="sortIcon"></fa-icon></b></th>
+                        <th class="sort-col text-center px-0 col-md-1"><b>Hidden <fa-icon [icon]="sortIcon"></fa-icon></b></th>
+                        <th class="sort-col text-center px-0 col-md-1"><b>Banned <fa-icon [icon]="sortIcon"></fa-icon></b></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let user of (users$ | async) index as i">
-                        <td class="border-right" data-checkbox="">
+                    <tr *ngFor="let user of filteredUsers index as i">
+                        <td class="border-right col-md-1" data-checkbox="">
                             <div *ngIf="user.roles.length != 2" class="form-check text-center">
                                 <input ngModel #name="ngModel" name="id" type="checkbox" class="form-check-input"
                                     (change)="radioChange(name.value, user)">
                             </div>
                         </td>
-                        <td class="team-id text-center" value="1">
+                        <td class="team-id text-center col-md-1" value="1">
                             {{i + 1}}
                         </td>
-                        <td class="team-name" value="admin">
+                        <td class="team-name col-md-2" value="admin">
                             <a routerLink="">
                                 {{ user.username }}
                             </a>
                         </td>
-                        <td class="d-none d-md-table-cell d-lg-table-cell" value="">
+                        <td class="d-none d-md-table-cell d-lg-table-cell col-md-2" value="">
                             <a routerLink="">{{ user.email }}</a>
                         </td>
-                        <td class="text-center" value="">
+                        <td class="d-none d-md-table-cell d-lg-table-cell col-md-2" value="">
                             <span>{{user.school}}</span>
                         </td>
-                        <td class="d-md-table-cell d-lg-table-cell text-center" value="admin">
+                        <td class="d-md-table-cell d-lg-table-cell text-center  col-md-1" value="admin">
                             <span *ngIf="user.roles.length == 2" class="badge badge-primary">admin</span>
                         </td>
-                        <td class="d-md-table-cell d-lg-table-cell text-center" value="False">
+                        <td class="d-md-table-cell d-lg-table-cell text-center  col-md-1" value="False">
                             <span *ngIf="user.roles.length != 2 && user.verified"
                                 class="badge badge-success">verified</span>
                         </td>
-                        <td class="d-md-table-cell d-lg-table-cell text-center" value="True">
+                        <td class="d-md-table-cell d-lg-table-cell text-center  col-md-1" value="True">
                             <span *ngIf="user.roles.length != 2 && user.hidden" class="badge badge-danger">hidden</span>
                         </td>
-                        <td class="d-md-table-cell d-lg-table-cell text-center" value="False">
-                            <span *ngIf="user.roles.length != 2 && user.banned" class="badge badge-danger">banned</span>
+                        <td class="d-md-table-cell d-lg-table-cell text-center  col-md-1" value="False">
+                            <span *ngIf="user.roles.length != 2 && !user.banned" class="badge badge-danger">banned</span>
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <ng-template #template>
+            <ng-template #delete>
                 <div class="modal-header">
                     <h5 class="modal-title">Delete Users</h5>
                     <button type="button" class="btn-close close pull-right" aria-label="Close"
@@ -115,6 +101,38 @@
                 <div class="modal-footer"> 
                     <button class="btn btn-danger" (click)="modalRef?.hide()">No</button>
                     <button class="btn btn-primary" (click)="deleteUsers()">Yes</button>
+                </div>
+            </ng-template>
+            <ng-template #edit>
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Users</h5>
+                    <button type="button" class="btn-close close pull-right" aria-label="Close"
+                        (click)="modalRef?.hide()">
+                        <span aria-hidden="true" class="visually-hidden">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form #f="ngForm">
+                        <div class="form-group">
+                          <label>Banned</label>
+                          <select ngModel #banned="ngModel" name="banned" data-initial="">
+                            <option value="">--</option>
+                            <option value="false">True</option>
+                            <option value="true">False</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label>Hidden</label>
+                          <select ngModel #hidden="ngModel" name="hidden" data-initial="">
+                            <option value="">--</option>
+                            <option value="true">True</option>
+                            <option value="false">False</option>
+                          </select>
+                        </div>
+                      </form>
+                </div>
+                <div class="modal-footer"> 
+                    <button class="btn btn-primary" type="submit" value="Submit" (click)="editUsers(f.value)">Submit</button>
                 </div>
             </ng-template>
         </div>

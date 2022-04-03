@@ -1,3 +1,5 @@
+
+
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { RouterModule } from '@angular/router';
@@ -14,12 +16,15 @@ import { AdminJumbotronComponent } from './admin-jumbotron/admin-jumbotron.compo
 
 
 
+
+
 @NgModule({
   declarations: [
     JumbotronComponent,
     AdminJumbotronComponent
   ],
   imports: [
+
     CommonModule,
     FormsModule,
     HttpClientModule,
@@ -29,9 +34,11 @@ import { AdminJumbotronComponent } from './admin-jumbotron/admin-jumbotron.compo
     TabsModule,
     RouterModule,
     TooltipModule,
-    ModalModule
+    ModalModule,
+    
   ],
   exports : [
+
     JumbotronComponent,
     FormsModule,
     HttpClientModule,

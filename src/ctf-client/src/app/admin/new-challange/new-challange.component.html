@@ -1,0 +1,119 @@
+<admin-jumbotron>
+    Create Challenge
+</admin-jumbotron>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3 offset-md-1">
+            <h5 class="text-center pb-3">
+                Challenge Types
+            </h5>
+            <div id="create-chals-select">
+                <label class="w-100">
+                    <input type="radio" name="type" class="card-radio d-none" value="standard" checked="">
+                    <div class="card rounded-0">
+                        <div class="card-body">
+                            <span class="card-title">
+                                <div class="form-check">
+                                    <input class="form-check-input card-radio-clone" type="radio"
+                                        style="visibility: hidden;" checked="">
+                                    <span class="form-check-label">standard</span>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </label>
+            </div>
+        </div>
+        <div class="col-md-7">
+            <div id="create-chal-entry-div">
+
+
+                <form method="POST" action="/admin/challenges/new" enctype="multipart/form-data">
+
+                    <div class="form-group">
+                        <label>
+                            Name:<br>
+                            <small class="form-text text-muted">
+                                The name of your challenge
+                            </small>
+                        </label>
+                        <input type="text" class="form-control" name="name" placeholder="Enter challenge name">
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label>
+                            Category:<br>
+                            <small class="form-text text-muted">
+                                The category of your challenge
+                            </small>
+                        </label>
+                        <input type="text" class="form-control" name="category" placeholder="Enter challenge category">
+                    </div>
+
+
+
+
+                    <div class="form-group">
+                        <label>
+                            Message:<br>
+                            <small class="form-text text-muted">
+                                Use this to give a brief introduction to your challenge.
+                            </small>
+                        </label>
+
+                        <div class="EasyMDEContainer">
+                            <div class="editor-toolbar">
+                                <button class="btn btn-primary" type="button" title="Bold" (click)="switchToMark()"><fa-icon [icon]="switchViewIcon"></fa-icon></button>
+                                
+                            </div>
+
+  
+                            <textarea *ngIf="!isSwitched;" #t class="textarea" [value]="markdown"  (keyup)="onKeyUp(t.value)"></textarea>
+                                
+                            <div style="border : solid 1px rgb(118, 118, 118); border-top: 0px;" class="textarea" *ngIf="isSwitched;">
+                                <markdown  [data]="markdown"></markdown>
+                            </div>
+                                
+
+                       
+
+                        </div>
+                    </div>
+                    
+
+
+                    <div class="form-group">
+                        <label>
+                            Value:<br>
+                            <small class="form-text text-muted">
+                                This is how many points are rewarded for solving this challenge.
+                            </small>
+                        </label>
+                        <input type="number" class="form-control" name="value" placeholder="Enter value" required="">
+                    </div>
+
+
+
+                    <input type="hidden" name="state" value="hidden">
+
+
+
+                    <input type="hidden" name="type" value="standard">
+
+
+
+                    <div class="form-group">
+                        <button class="btn btn-primary float-right create-challenge-submit"
+                            type="submit">Create</button>
+                    </div>
+
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+</div>

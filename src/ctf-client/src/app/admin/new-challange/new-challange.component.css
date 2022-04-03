@@ -1,0 +1,82 @@
+a {
+    color: inherit;
+}
+
+
+.form-control {
+    position: relative;
+    display: block;
+    border-radius: 0;
+    background-color: #fff;
+    font-weight: 400;
+    line-height: 1;
+    padding-top: 6;
+    padding-bottom: 6;
+    transition: background-color .3s, border-color .3s;
+}
+
+.form-control:focus {
+    border-color: #a3d39c;
+    box-shadow: 0 0 0 0.1rem #a3d39c;
+    background-color: #fff;
+    transition: background-color .3s, border-color .3s;
+}
+
+
+
+.card-radio:checked+.card {
+    background-color: transparent!important;
+    border-color: #a3d39c;
+    box-shadow: 0 0 0 0.1rem #a3d39c;
+    transition: background-color .3s,border-color .3s;
+}
+
+
+
+.card-radio:checked+.card .card-radio-clone {
+    visibility: visible!important;
+}
+
+.form-check-input {
+    position: absolute;
+    margin-top: 0.3rem;
+    margin-left: -1.25rem;
+}
+
+.editor-toolbar {
+    margin-top: 0px;
+    padding: 15px;
+    border-top: 1px solid #bbb;
+    border-left: 1px solid #bbb;
+    border-right: 1px solid #bbb;
+    border-bottom: 1px solid #bbb;
+    margin-top: 8px;
+}
+
+
+.textarea {
+    width: 100%;
+    resize: auto;
+    outline: none;
+    min-height: 200px;
+    border-radius: 0;
+    background-color: #fff;
+    font-weight: 400;
+    line-height: 1;
+    padding: 10px;
+    transition: background-color .3s, border-color .3s;
+    border-top: 0px;
+}
+
+.textarea:focus {
+    outline: none;
+    border-color: #a3d39c;
+    box-shadow: 0 0 0 0.1rem #a3d39c;
+    background-color: #fff;
+    transition: background-color .3s, border-color .3s;
+}
+
+
+
+
+

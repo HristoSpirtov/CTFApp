@@ -15,4 +15,6 @@ public interface UserService {
     UserServiceModel register(UserServiceModel userServiceModel) throws UserNotFoundException, UsernameExistsException;
 
     void deleteUsers(List<UserServiceModel> userServiceModels);
+
+    void editUsers(List<UserServiceModel> userServiceModels);
 }

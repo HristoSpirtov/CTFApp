@@ -1,4 +1,4 @@
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { FormsModule } from '@angular/forms';
 import { AuthInterceptor } from './shared/interceptor/auth.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { UserService } from './shared/service/user.service';
@@ -24,6 +24,8 @@ const routes: Routes = [
   imports: [
     SharedModule,
     BrowserModule,
+    FormsModule,
+    
     
     RouterModule.forRoot(routes),
          BrowserAnimationsModule,
