@@ -28,8 +28,7 @@
         <div class="col-md-7">
             <div id="create-chal-entry-div">
 
-
-                <form method="POST" action="/admin/challenges/new" enctype="multipart/form-data">
+                <form #f="ngForm"(ngSubmit)="onSubmit(f.value)">
 
                     <div class="form-group">
                         <label>
@@ -38,22 +37,8 @@
                                 The name of your challenge
                             </small>
                         </label>
-                        <input type="text" class="form-control" name="name" placeholder="Enter challenge name">
+                        <input ngModel #name="ngModel" type="text" class="form-control" name="name" placeholder="Enter challenge name">
                     </div>
-
-
-
-                    <div class="form-group">
-                        <label>
-                            Category:<br>
-                            <small class="form-text text-muted">
-                                The category of your challenge
-                            </small>
-                        </label>
-                        <input type="text" class="form-control" name="category" placeholder="Enter challenge category">
-                    </div>
-
-
 
 
                     <div class="form-group">
@@ -64,26 +49,18 @@
                             </small>
                         </label>
 
-                        <div class="EasyMDEContainer">
-                            <div class="editor-toolbar">
-                                <button class="btn btn-primary" type="button" title="Bold" (click)="switchToMark()"><fa-icon [icon]="switchViewIcon"></fa-icon></button>
-                                
-                            </div>
-
-  
-                            <textarea *ngIf="!isSwitched;" #t class="textarea" [value]="markdown"  (keyup)="onKeyUp(t.value)"></textarea>
-                                
+                        <div class="editor-toolbar">
+                            <button class="btn btn-primary" type="button" tooltip="Swich to Preview"
+                            placement="top" (click)="switchToMark()"><fa-icon [icon]="switchViewIcon"></fa-icon></button>
+                            <button class="btn btn-primary" type="button" tooltip="Cheat Sheet"
+                            placement="top" style="margin-left : 10px" (click)="onNavigate()"><fa-icon [icon]="redirectToCheatSheet"></fa-icon></button>
+                        </div>
+                            <textarea name="description" *ngIf="!isSwitched;" class="textarea" wrap="hard" [(ngModel)]="markdown"  appTextareaAutoresize></textarea>
+                            
                             <div style="border : solid 1px rgb(118, 118, 118); border-top: 0px;" class="textarea" *ngIf="isSwitched;">
                                 <markdown  [data]="markdown"></markdown>
                             </div>
-                                
-
-                       
-
                         </div>
-                    </div>
-                    
-
 
                     <div class="form-group">
                         <label>
@@ -92,27 +69,24 @@
                                 This is how many points are rewarded for solving this challenge.
                             </small>
                         </label>
-                        <input type="number" class="form-control" name="value" placeholder="Enter value" required="">
+                        <input ngModel #name="ngModel" type="number" class="form-control" name="value" placeholder="Enter value" required="">
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            Flag:<br>
+                            <small class="form-text text-muted">
+                                Static flag for your challenge.
+                            </small>
+                        </label>
+                        <input ngModel #name="ngModel" type="text" class="form-control" name="flag" placeholder="Enter flag value" required="">
                     </div>
 
-
-
-                    <input type="hidden" name="state" value="hidden">
-
-
-
-                    <input type="hidden" name="type" value="standard">
-
-
-
                     <div class="form-group">
-                        <button class="btn btn-primary float-right create-challenge-submit"
-                            type="submit">Create</button>
+                        <input class="btn btn-primary float-right create-challenge-submit"
+                            type="submit" value="Create" [disabled]="!f.valid">
                     </div>
 
                 </form>
-
-
             </div>
         </div>
     </div>

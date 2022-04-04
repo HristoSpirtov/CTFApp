@@ -1,3 +1,4 @@
+import { MarkdownModule } from 'ngx-markdown';
 import { NavbarUserComponent } from './navbar-user/navbar-user.component';
 import { AuthenticationGuard } from './../shared/guard/authentication.guard';
 import { ChallengeComponent } from './challenge/challenge.component';
@@ -12,6 +13,11 @@ import { SharedModule } from './../shared/shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ScoreboardComponent } from './scoreboard/scoreboard.component';
+
+import 'prismjs';
+import 'prismjs/components/prism-typescript.min.js';
+
+
 
 const routes : Routes = [
   { path : '', component : UserComponent,
@@ -40,7 +46,8 @@ const routes : Routes = [
   imports: [
     CommonModule,
     SharedModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    MarkdownModule.forRoot()
   ]
 })
 export class UserModule { }

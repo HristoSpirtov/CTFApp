@@ -41,6 +41,7 @@ public class ExceptionHandling implements ErrorController { //implement error co
     public static final String ERROR_PATH = "/error";
     public static final String USERS_DELETED_SUCCESSFULLY = "Users were successfully deleted";
     public static final String USERS_EDITED_SUCCESSFULLY = "Users were successfully edited";
+    public static final String CHALLENGE_CREATED_SUCCESSFULLY = "Challenge was successfully created";
 
 
 

@@ -13,6 +13,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { JumbotronComponent } from './jumbotron/jumbotron.component';
 import { AdminJumbotronComponent } from './admin-jumbotron/admin-jumbotron.component';
+import { TextareaAutoresizeDirective } from '../shared/textarea-autoresize.directive';
+import { LineBreaksPipe } from './line-breaks.pipe';
 
 
 
@@ -21,7 +23,9 @@ import { AdminJumbotronComponent } from './admin-jumbotron/admin-jumbotron.compo
 @NgModule({
   declarations: [
     JumbotronComponent,
-    AdminJumbotronComponent
+    AdminJumbotronComponent,
+    TextareaAutoresizeDirective,
+    LineBreaksPipe
   ],
   imports: [
 
@@ -38,7 +42,7 @@ import { AdminJumbotronComponent } from './admin-jumbotron/admin-jumbotron.compo
     
   ],
   exports : [
-
+    TextareaAutoresizeDirective,
     JumbotronComponent,
     FormsModule,
     HttpClientModule,
@@ -48,7 +52,8 @@ import { AdminJumbotronComponent } from './admin-jumbotron/admin-jumbotron.compo
     TabsModule,
     AdminJumbotronComponent,
     RouterModule,
-    TooltipModule
+    TooltipModule,
+    LineBreaksPipe
   ], 
   providers : []
 })
