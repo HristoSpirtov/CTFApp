@@ -1,3 +1,4 @@
+import { SubmissionService } from './shared/service/submission.service';
 import { ChallengeService } from './shared/service/challenge.service';
 import { FormsModule } from '@angular/forms';
 import { AuthInterceptor } from './shared/interceptor/auth.interceptor';
@@ -37,6 +38,7 @@ const routes: Routes = [
     AuthenticationService, 
     UserService, 
     ChallengeService,
+    SubmissionService,
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
   ],
   exports :[],

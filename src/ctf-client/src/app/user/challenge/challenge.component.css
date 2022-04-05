@@ -2,3 +2,9 @@
     box-shadow: 3px 3px 3px grey;
     
 }
+
+.solved-challenge {
+    background-color: #37d63e!important;
+    opacity: .4;
+    border: none;
+}

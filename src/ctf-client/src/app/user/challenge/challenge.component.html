@@ -9,7 +9,7 @@
         <div class="category-challenges col-md-12">
             <div *ngFor="let row of challenges index as i" class="challenges-row col-md-12">
                 <div *ngFor="let challenge of challenges[i]" class="col-md-3 d-inline-block">
-                    <button class="btn btn-dark challenge-button w-100 text-truncate pt-3 pb-3 mb-2"
+                    <button class="btn btn-dark challenge-button w-100 text-truncate pt-3 pb-3 mb-2" [class.solved-challenge]="isSolvedByUser(challenge)"
                         (click)="openChallengeModal(challengeModal, challenge)">
                         <p>{{ challenge.name }}</p><span>{{ challenge.value }}</span>
                     </button>
@@ -44,28 +44,18 @@
                             <div class="col-md-9 form-group">
 
                                 <input id="challenge-id" class="challenge-id" type="hidden" value="5">
-                                <input id="challenge-input" class="challenge-input form-control" type="text"
-                                    name="answer" placeholder="Flag">
+                                <input ngModel #name="ngModel" id="challenge-input" class="challenge-input form-control" type="text"
+                                    name="provided" placeholder="Flag">
 
                             </div>
                             <div class="col-md-3 form-group key-submit">
 
-                                <button id="challenge-submit"
-                                    class="challenge-submit btn btn-md btn-outline-secondary float-right" style="padding: 15px 20px;" type="submit">
+                                <button id="challenge-submit" [disabled]="isSolvedByUser(clickedChallange)"
+                                    class="challenge-submit btn btn-md btn-outline-secondary float-right" style="padding: 15px 20px;" type="submit" (click)="submit(name.value)">
                                     Submit
                                 </button>
-
                             </div>
                         </div>
-
-                        <!-- <div class="row notification-row">
-                            <div class="col-md-12">
-                                <div id="result-notification" class="alert alert-dismissable text-center w-100"
-                                    role="alert" style="display: none;">
-                                    <strong id="result-message"></strong>
-                                </div>
-                            </div>
-                        </div> -->
                     </div>
                 </div>
             </div>

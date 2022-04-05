@@ -2,8 +2,11 @@ package com.ctf.ctfserver.service.challenge;
 
 import com.ctf.ctfserver.domain.entities.Challenge;
 import com.ctf.ctfserver.domain.entities.Flag;
+import com.ctf.ctfserver.domain.entities.Submission;
 import com.ctf.ctfserver.domain.models.mapper.ChallengeMapper;
+import com.ctf.ctfserver.domain.models.mapper.SubmissionMapper;
 import com.ctf.ctfserver.domain.models.service.ChallengeServiceModel;
+import com.ctf.ctfserver.domain.models.service.SubmissionServiceModel;
 import com.ctf.ctfserver.repository.ChallengeRepository;
 import com.ctf.ctfserver.repository.FlagRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +41,8 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     @Override
     public List<ChallengeServiceModel> getAllChallenges() {
+
+
         return this.challengeRepository.findAll().stream()
                 .map(ChallengeMapper.INSTANCE::ChallengeToChallengeServiceModel)
                 .collect(Collectors.toList());

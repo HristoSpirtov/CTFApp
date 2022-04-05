@@ -26,9 +26,13 @@ public class Challenge extends BaseEntity {
     @Column(name = "value", nullable = false)
     private Integer value;
 
-    @OneToMany(targetEntity = Flag.class, fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = Flag.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")
     private Collection<Flag> flags = new java.util.ArrayList<>();
+
+    @OneToMany(targetEntity = Submission.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "challenge_id")
+    private Collection<Submission> submissions;
 
 
 }

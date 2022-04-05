@@ -62,6 +62,11 @@ export class AuthenticationService {
   
   }
 
+  public getUserFromLocalStorage() {
+    return localStorage.getItem('user');
+  
+  }
+
   private isUserLoggedIn() : boolean {
     let token : string | null = this.getToken();
     if (token !== null && token !== undefined) {   

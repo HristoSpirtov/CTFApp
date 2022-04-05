@@ -1,6 +1,7 @@
 package com.ctf.ctfserver.domain.models.response;
 
 import com.ctf.ctfserver.domain.models.service.RoleServiceModel;
+import com.ctf.ctfserver.domain.models.service.SubmissionServiceModel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
