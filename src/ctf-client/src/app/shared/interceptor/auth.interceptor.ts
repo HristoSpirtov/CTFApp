@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import { HeaderType } from '../enum/header-type.enum';
 import { AuthenticationService } from '../service/authentication.service';
@@ -10,24 +11,27 @@ import {
   HttpErrorResponse,
   HttpResponse
 } from '@angular/common/http';
-import { catchError, Observable, BehaviorSubject, switchMap, filter, take, map, throwError } from 'rxjs';
+import { catchError, Observable, BehaviorSubject, switchMap, filter, take, throwError } from 'rxjs';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-
+  
+  private host;
   private isRefreshing = false;
   private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
-  constructor(private authenticationService : AuthenticationService, private router : Router) {}
+  constructor(private authenticationService : AuthenticationService, private router : Router) {
+    this.host = environment.apiUrl;
+  }
 
   intercept(httpRequest: HttpRequest<any>, HttpHandler: HttpHandler) : Observable<HttpEvent<any>> {
-    if (httpRequest.url.includes('http://localhost:8080/api/login')) {
+    if (httpRequest.url.includes(`${this.host}/api/login`)) {
       return HttpHandler.handle(httpRequest);
     }
-    if (httpRequest.url.includes('http://localhost:8080/api/register')) {
+    if (httpRequest.url.includes(`${this.host}/api/register`)) {
       return HttpHandler.handle(httpRequest);
     }
-    if (httpRequest.url.includes('http://localhost:8080/api/token/refresh')) {
+    if (httpRequest.url.includes(`${this.host}/api/token/refresh`)) {
       return HttpHandler.handle(httpRequest);
     }
     
