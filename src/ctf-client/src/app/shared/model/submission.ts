@@ -1,6 +1,6 @@
-import { Challenge } from './challenge';
 export class Submission {
    
+    public id : string;
     public user : string;
     public challenge : string;
     public school : string;
@@ -9,6 +9,7 @@ export class Submission {
     public date : Date;
 
     constructor() {
+        this.id = '';
         this.user = '';
         this.school = '';
         this.challenge = '';
@@ -16,8 +17,4 @@ export class Submission {
         this.provided = '';
         this.date = new Date();
     }
-    
-        
-
-    
 }

@@ -10,7 +10,7 @@ import java.util.List;
 public interface UserService {
 
     User findUserByUsername(String username);
-    List<User> getUsers();
+    List<UserServiceModel> getUsers();
 
     UserServiceModel register(UserServiceModel userServiceModel) throws UserNotFoundException, UsernameExistsException;
 

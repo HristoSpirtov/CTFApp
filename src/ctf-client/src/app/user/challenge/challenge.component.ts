@@ -6,7 +6,7 @@ import { User } from './../../shared/model/user';
 import { SubmissionService } from './../../shared/service/submission.service';
 import { Submission } from './../../shared/model/submission';
 import { Subscription, take } from 'rxjs';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { ChallengeService } from 'src/app/shared/service/challenge.service';
 import { Challenge } from './../../shared/model/challenge';
 import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
@@ -24,6 +24,8 @@ export class ChallengeComponent implements OnInit, OnDestroy {
   clickedChallange! : Challenge 
   subscription! : Subscription
   user! : User
+  solves!: Submission[];
+  curSolves! : Submission[];
 
   
   constructor(private challengeService : ChallengeService, public modalService: BsModalService, private router : Router,
@@ -37,6 +39,11 @@ export class ChallengeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscription = this.challengeService.getChallenges().subscribe(challenges => {
       this.challenges = this.splitArr(challenges, 4);
+      this.solves = this.challenges
+        .flatMap(ch => ch)
+        .map(ch => ch.submissions)
+        .flatMap(sub => sub)
+        .filter(sub => sub.type === 'CORRECT')
     })
   }
 
@@ -47,7 +54,11 @@ export class ChallengeComponent implements OnInit, OnDestroy {
   
  openChallengeModal(template: TemplateRef<any>, challenge : Challenge) {
     this.clickedChallange = challenge;
-    this.modalRef = this.modalService.show(template)
+    this.curSolves = this.solves.filter(sub => sub.challenge === this.clickedChallange.name);
+  
+    this.modalRef = this.modalService.show(template, {
+      class: 'modal-lg'
+    });
       
  }
 
@@ -74,9 +85,6 @@ isSolvedByUser(challenge : Challenge) : boolean {
   let arr = challenge.submissions.filter(submission => submission.user == this.user.username);
   return arr.filter(submission => submission.type == 'CORRECT').length == 1 ? true : false;
 }
-
-
-
 
  private splitArr(arr : any, size : any) {
     let newArr = [];

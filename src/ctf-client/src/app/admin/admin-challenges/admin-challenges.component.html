@@ -1,6 +1,149 @@
 <admin-jumbotron>
     Challenges
-    <a routerLink="/admin/challenges/new" tooltip="Create Challenge" placement="top" style="color: inherite;">
-        <fa-icon [icon]="addIcon"></fa-icon>
+    <a routerLink="/admin/challenges/new" tooltip="Create Challenge" placement="top">
+        <fa-icon style="color: #212529" [icon]="addIcon"></fa-icon>
     </a>
 </admin-jumbotron>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+            <select style="height: 45px !important;" #filterBy class="form-control w-100" id="field" name="field">
+                <option value="name">Name</option>
+            </select>
+        </div>
+        <div class="col-md-10">
+            <input style="height: 45px !important;" #query class="form-control w-100" placeholder="Search for matching challenges" (keyup)="filter(query.value, filterBy.value)">
+        </div>
+    </div>
+    <hr>    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="float-right pb-3">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-secondary" title="" tooltip="Edit Challenges"
+                        placement="top" id="challenges-edit-button" data-original-title="Edit Challenges" (click)="openEditModal(edit)">
+                        <fa-icon [icon]="editIcon"></fa-icon>
+                    </button>
+                    <button type="button" class="btn btn-outline-danger" title="" tooltip="Delete Challenges" placement="top"
+                        id="challenges-delete-button" data-original-title="Delete Challenges" (click)="openDeleteModal(delete)">
+                        <fa-icon [icon]="deleteIcon"></fa-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table id="userboard" class="table table-striped border">
+                <thead>
+                    <tr>
+                        <th class="border-right col-md-1" data-checkbox="">
+                            <div *ngIf="challenges.length != 0" class="form-check text-center">       
+                                <input ngModel #name="ngModel" name="masterCheck" type="checkbox" class="form-check-input"
+                                (change)="radioChangeMaster()">
+                            </div>
+                        </th>
+                        <th class="sort-col text-center col-md-1"><b>No</b> <i class="fas fa-sort"></i></th>
+                        <th class="sort-col col-md-3"><b>Name <fa-icon [icon]="sortIcon"></fa-icon></b></th>
+                        <th class="d-md-table-cell d-lg-table-cell sort-col col-md-3"><b>Category <fa-icon [icon]="sortIcon"></fa-icon></b></th>
+                        <th class="sort-col text-center col-md-1"><b>Value <fa-icon [icon]="sortIcon"></fa-icon></b></th>
+                        <th class="sort-col text-center px-0 col-md-2"><b>Type <fa-icon [icon]="sortIcon"></fa-icon></b></th>
+                        <th class="sort-col text-center px-0 col-md-1"><b>State <fa-icon [icon]="sortIcon"></fa-icon></b></th>   
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let challenge of filteredChallenges index as i">
+                        <td class="border-right col-md-1" data-checkbox="">
+                            <div class="form-check text-center">       
+                                <input ngModel #name="ngModel" name="chk" type="checkbox" class="form-check-input"
+                                (change)="radioChange(name.value, challenge)">
+                            </div>
+                        </td>
+                        <td class="team-id text-center col-md-1" value="1">
+                            {{ i + 1 }}
+                        </td>
+
+                        <ng-container *ngIf="filterBy.value === 'name'; else notName">
+                            <td  class="col-md-3">
+                                <a [routerLink]="[challenge.id]" innerHtml='{{challenge.name | textHighlight:query.value}}'>   
+                                </a>
+                            </td>
+                        </ng-container>
+                    
+                        <ng-template #notName>
+                            <td class="col-md-3">
+                                <a [routerLink]="[challenge.id]" innerHtml="{{challenge.name}}"></a>    
+                            </td>   
+                        </ng-template>
+
+                        <td class="d-none d-md-table-cell d-lg-table-cell col-md-3" value="">
+                            <span>Category</span>
+                        </td>
+                        <td class="d-none text-center d-md-table-cell d-lg-table-cell col-md-1" value="">
+                            <span>{{ challenge.value }}</span>
+                        </td>
+                        <td class="d-none text-center d-md-table-cell d-lg-table-cell col-md-2" value="">
+                            <span>{{ challenge.type }}</span>
+                        </td>
+                        <td class="d-none  text-center d-md-table-cell d-lg-table-cell col-md-1" value="">
+                            <span *ngIf="challenge.state === 'visible'" class="badge badge-success">visible</span>
+                            <span *ngIf="challenge.state === 'hidden'" class="badge badge-danger">hidden</span>
+                        </td>
+                        
+                    </tr>
+                </tbody>
+            </table>
+        
+            
+            <ng-template #delete>
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete Challenges</h5>
+                    <button type="button" class="btn-close close pull-right" aria-label="Close"
+                        (click)="modalRef?.hide()">
+                        <span aria-hidden="true" class="visually-hidden">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete {{ selectedChallenges.length }} challenges?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" (click)="modalRef?.hide()">No</button>
+                    <button class="btn btn-primary" (click)="deleteChallenges()">Yes</button>
+                </div>
+            </ng-template>
+            <ng-template #edit>
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Challenges</h5>
+                    <button type="button" class="btn-close close pull-right" aria-label="Close"
+                        (click)="modalRef?.hide()">
+                        <span aria-hidden="true" class="visually-hidden">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form #f="ngForm">
+                        <div class="form-group">
+                            <label style="margin-right: 4px">Category</label>
+                            <input ngModel #category="ngModel" name="category" data-initial="" style="border-color: black; border-width: 1px;">  
+                          </div>
+                        <div class="form-group">
+                            <label style="margin-right: 4px">Value</label>
+                            <input type="number" min="0" value="0" ngModel #val="ngModel" name="value" data-initial="" style="border-color: black; border-width: 1px;">  
+                        </div>
+                        <div class="form-group">
+                          <label style="margin-right: 4px">State</label>
+                          <select ngModel #state="ngModel" name="state" data-initial="" style="padding-left: 3px">
+                            <option value="">--</option>
+                            <option value="visible">Visible</option>
+                            <option value="hidden">Hidden</option>
+                          </select>
+                        </div>
+                      </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit" value="Submit" (click)="editChallenges(f.value)">Submit</button>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+</div>

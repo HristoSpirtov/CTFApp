@@ -5,7 +5,6 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.ctf.ctfserver.domain.UserPrincipal;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,7 +12,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Date;
@@ -31,29 +29,31 @@ public class JWTTokenProvider {
     public String generateJWTToken(UserPrincipal userPrincipal) {
         String[] claims = getClaimsFromUser(userPrincipal);
         return JWT.create()
-                .withIssuer(GET_CTFA)
-                .withAudience(GET_CTFA_CLIENT)
-                .withIssuedAt(new Date()).withSubject(userPrincipal.getUsername())
-                .withArrayClaim(AUTHORITIES, claims)
-                .withExpiresAt(new Date(System.currentTimeMillis() + JWT_EXPIRATION_TIME))
-                .sign(Algorithm.HMAC512(secret.getBytes()));
+            .withIssuer(GET_CTFA)
+            .withAudience(GET_CTFA_CLIENT)
+            .withIssuedAt(new Date())
+            .withSubject(userPrincipal.getUsername())
+            .withArrayClaim(AUTHORITIES, claims)
+            .withExpiresAt(new Date(System.currentTimeMillis() + JWT_EXPIRATION_TIME))
+            .sign(Algorithm.HMAC512(secret.getBytes()));
     }
 
     public String generateJWTRefreshToken(UserPrincipal userPrincipal) {
         return JWT.create()
-                .withIssuer(GET_CTFA)
-                .withAudience(GET_CTFA_CLIENT)
-                .withIssuedAt(new Date()).withSubject(userPrincipal.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + JWT_REFRESH_TOKEN_EXPIRATION_TIME))
-                .sign(Algorithm.HMAC512(secret.getBytes()));
+            .withIssuer(GET_CTFA)
+            .withAudience(GET_CTFA_CLIENT)
+            .withIssuedAt(new Date())
+            .withSubject(userPrincipal.getUsername())
+            .withExpiresAt(new Date(System.currentTimeMillis() + JWT_REFRESH_TOKEN_EXPIRATION_TIME))
+            .sign(Algorithm.HMAC512(secret.getBytes()));
     }
 
     public List<GrantedAuthority> getAuthority(String token) {
         String[] claims = getClaimsFromToken(token);
         return Arrays
-                .stream(claims)
-                .map(c -> new SimpleGrantedAuthority(c))
-                .collect(Collectors.toList());
+            .stream(claims)
+            .map(SimpleGrantedAuthority::new)
+            .collect(Collectors.toList());
     }
 
     public Authentication getAuthentication(String username, List<GrantedAuthority> authorities, HttpServletRequest request) {
@@ -98,9 +98,8 @@ public class JWTTokenProvider {
     private String[] getClaimsFromUser(UserPrincipal user) {
 
         return user.getAuthorities()
-                .stream()
-                .map(a -> a.getAuthority())
-                .toArray(String[]::new);
+            .stream()
+            .map(GrantedAuthority::getAuthority)
+            .toArray(String[]::new);
     }
-
 }

@@ -1,22 +1,23 @@
 <admin-jumbotron>
     Users
     <a routerLink="/admin/users/new" tooltip="Create User" placement="top" style="color: inherite;">
-        <fa-icon [icon]="addIcon"></fa-icon>
+        <fa-icon style="color: #212529" [icon]="addIcon"></fa-icon>
     </a>
 </admin-jumbotron>
 <div class="container">
     <div class="row">
-        <div class="col-md-2">
-            <select #filterBy class="form-control w-100" id="field" name="field">
-                <option value="username">username</option>
-                <option value="school">school</option>
+        <div class="col-md-2" >
+            <select style="height: 45px !important;" #filterBy class="form-control" id="field" name="field">
+                <option value="username">Username</option>
+                <option value="school">School</option>
             </select>
+           
         </div>
         <div class="col-md-10">
-            <input #query class="form-control w-100" placeholder="Search for matching users" (keyup)="filter(query.value, filterBy.value)">
-        </div> 
+            <input  style="height: 45px !important;" #query class="form-control w-100" placeholder="Search for matchin users" (keyup)="filter(query.value, filterBy.value)">
+        </div>
     </div>
-    <hr>
+    <hr>    
     <div class="row">
         <div class="col-md-12">
             <div class="float-right pb-3">
@@ -38,7 +39,12 @@
             <table id="userboard" class="table table-striped border">
                 <thead>
                     <tr>
-                        <th class="border-right col-md-1"></th>
+                        <th class="border-right col-md-1" data-checkbox="">
+                            <div  class="form-check text-center">       
+                                <input ngModel #name="ngModel" name="masterCheck" type="checkbox" class="form-check-input"
+                                (change)="radioChangeMaster()">
+                            </div>
+                        </th>
                         <th class="sort-col text-center col-md-1"><b>No</b> <i class="fas fa-sort"></i></th>
                         <th class="sort-col text-center col-md-2"><b>User <fa-icon [icon]="sortIcon"></fa-icon></b></th>
                         <th class="d-md-table-cell d-lg-table-cell sort-col text-center col-md-2"><b>Email <fa-icon [icon]="sortIcon"></fa-icon></b></th>
@@ -52,26 +58,47 @@
                 <tbody>
                     <tr *ngFor="let user of filteredUsers index as i">
                         <td class="border-right col-md-1" data-checkbox="">
-                            <div *ngIf="user.roles.length != 2" class="form-check text-center">
-                                <input ngModel #name="ngModel" name="id" type="checkbox" class="form-check-input"
-                                    (change)="radioChange(name.value, user)">
+                            <div *ngIf="user.roles.length != 2" class="form-check text-center">       
+                                <input ngModel #name="ngModel" name="chk" type="checkbox" class="form-check-input"
+                                (change)="radioChange(name.value, user)">
                             </div>
                         </td>
-                        <td class="team-id text-center col-md-1" value="1">
-                            {{i + 1}}
+                        <td class="team-id text-center col-md-1" value="">
+                            {{ i + 1 }}
                         </td>
-                        <td class="team-name col-md-2" value="admin">
-                            <a routerLink="">
-                                {{ user.username }}
-                            </a>
-                        </td>
-                        <td class="d-none d-md-table-cell d-lg-table-cell col-md-2" value="">
+                        <ng-container *ngIf="filterBy.value === 'username'; else notUsername">
+                            <td  class="col-md-2">
+                                
+                                <a routerLink="" innerHtml='{{user.username | textHighlight:query.value}}'>   
+                                </a>
+                            </td>
+                        </ng-container>
+                    
+                        <ng-template #notUsername>
+                            <td class="col-md-2">
+                                <a routerLink="" innerHtml="{{user.username}}"></a>    
+                            </td>   
+                        </ng-template>
+                        
+                        <td class="d-none d-md-table-cell d-lg-table-cell col-md-2">
                             <a routerLink="">{{ user.email }}</a>
                         </td>
-                        <td class="d-none d-md-table-cell d-lg-table-cell col-md-2" value="">
-                            <span>{{user.school}}</span>
-                        </td>
-                        <td class="d-md-table-cell d-lg-table-cell text-center  col-md-1" value="admin">
+                        
+                        <ng-container *ngIf="filterBy.value === 'school'; else notSchool">
+                            <td  class="col-md-2">
+                                
+                                <a routerLink="" innerHtml='{{user.school | textHighlight:query.value}}'>   
+                                </a>
+                            </td>
+                        </ng-container>
+                    
+                        <ng-template #notSchool>
+                            <td class="col-md-2">
+                                <a routerLink="" innerHtml="{{user.school}}"></a>    
+                            </td>   
+                        </ng-template>
+
+                        <td class="d-md-table-cell d-lg-table-cell text-center  col-md-1">
                             <span *ngIf="user.roles.length == 2" class="badge badge-primary">admin</span>
                         </td>
                         <td class="d-md-table-cell d-lg-table-cell text-center  col-md-1" value="False">
@@ -98,7 +125,7 @@
                 <div class="modal-body">
                     <p>Are you sure you want to delete {{ selectedUsers.length }} users?</p>
                 </div>
-                <div class="modal-footer"> 
+                <div class="modal-footer">
                     <button class="btn btn-danger" (click)="modalRef?.hide()">No</button>
                     <button class="btn btn-primary" (click)="deleteUsers()">Yes</button>
                 </div>
@@ -114,7 +141,7 @@
                 <div class="modal-body">
                     <form #f="ngForm">
                         <div class="form-group">
-                          <label>Banned</label>
+                          <label style="margin-right: 4px">Banned</label>
                           <select ngModel #banned="ngModel" name="banned" data-initial="">
                             <option value="">--</option>
                             <option value="false">True</option>
@@ -122,7 +149,7 @@
                           </select>
                         </div>
                         <div class="form-group">
-                          <label>Hidden</label>
+                          <label style="margin-right: 4px">Hidden</label>
                           <select ngModel #hidden="ngModel" name="hidden" data-initial="">
                             <option value="">--</option>
                             <option value="true">True</option>
@@ -131,7 +158,7 @@
                         </div>
                       </form>
                 </div>
-                <div class="modal-footer"> 
+                <div class="modal-footer">
                     <button class="btn btn-primary" type="submit" value="Submit" (click)="editUsers(f.value)">Submit</button>
                 </div>
             </ng-template>

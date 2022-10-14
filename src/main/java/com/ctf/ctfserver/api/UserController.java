@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.ctf.ctfserver.constant.SecurityConstant.*;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -37,9 +38,13 @@ public class UserController extends ExceptionHandling {
 
     @GetMapping("/users")
     @PreAuthorize("hasRole('ROLE_ROOT')")
-    public ResponseEntity<List<User>>getUsers() throws UserNotFoundException {
+    public ResponseEntity<List<UserResponseModel>>getUsers() throws UserNotFoundException {
 
-        return ResponseEntity.ok().body(userService.getUsers());
+        List<UserResponseModel> allUsers = this.userService.getUsers().stream()
+                .map(UserMapper.INSTANCE::userServiceModelToUserResponseModel)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok().body(allUsers);
     }
 
 
@@ -94,7 +99,7 @@ public class UserController extends ExceptionHandling {
 
                 UserPrincipal user = new UserPrincipal(this.userService.findUserByUsername(username));
                 String newAccessToken = jwtTokenProvider.generateJWTToken(user);
-                Map<String, String> tokens = new HashMap<>();
+
                 response.setHeader(JWT_TOKEN_HEADER, newAccessToken);
                 response.setHeader(JWT_REFRESH_TOKEN_HEADER, refreshToken);
             }

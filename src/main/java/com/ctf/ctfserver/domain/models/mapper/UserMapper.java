@@ -16,6 +16,7 @@ public interface UserMapper {
 
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
+    UserServiceModel userResponseModelToUserServiceModel(UserResponseModel userResponseModel);
     UserServiceModel userServiceBindingModelToUserServiceModel(UserRegisterBindingModel userRegisterBindingModel);
     User userServiceModelToUser(UserServiceModel userServiceModel);
     UserServiceModel userToUserServiceModel(User user);

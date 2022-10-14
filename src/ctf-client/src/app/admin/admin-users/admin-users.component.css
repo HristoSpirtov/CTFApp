@@ -34,6 +34,35 @@ b {
     background-color: #e6eaee;
 }
 
+input.ng-valid {
+    border-color: #a3d39c;
+    box-shadow: none;
+    background-color: #fff;
+    transition: background-color .3s, border-color .3s;
+}
+
+.form-check-input {
+    position : relative;
+    width: 14px ;
+    height: 14px ;
+}
+
+a[ng-reflect-router-link]:hover {
+    color: #0056b3 !important;
+}
+
+a[ng-reflect-router-link] {
+    color: #337ab7 !important;
+}
+
+
+
+
+
+
+
+
+
 
 
 

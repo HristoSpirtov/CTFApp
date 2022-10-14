@@ -3,3 +3,7 @@
 div, h5 {
     text-align: center;
 }
+
+a[ng-reflect-router-link] {
+    color: #337ab7 !important;
+}

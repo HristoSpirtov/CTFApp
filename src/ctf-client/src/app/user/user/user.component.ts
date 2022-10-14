@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user',
@@ -7,9 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserComponent implements OnInit {
 
-  constructor() { }
+  adminString! : String;
+  
+  constructor(private router : Router) {}
 
   ngOnInit(): void {
+    this.router.events.subscribe(() => {
+      this.adminString = this.router.url.split("/")[1];
+    });
   }
 
 }

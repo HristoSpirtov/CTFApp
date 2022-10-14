@@ -1,0 +1,52 @@
+.default {
+    font-size: medium;
+}
+
+h3 {
+    margin-top: 10Px;
+    margin-bottom: 20px;
+}
+
+.table>tbody tr:hover {
+    background-color: #e6eaee;
+}
+
+tr, th {
+    border: 0px;
+}
+
+fa-icon {
+    cursor: pointer;
+}
+
+button {
+    margin: 10px;
+}
+
+.form-control {
+    position: relative;
+    display: block;
+    border-radius: 0;
+    background-color: #fff;
+    font-weight: 400;
+    line-height: 1;
+    padding-top: 6;
+    padding-bottom: 6;
+    color: #495057;
+    transition: background-color .3s, border-color .3s;
+}
+
+.form-control:focus {
+    border-color: #a3d39c;
+    box-shadow: 0 0 0 0.1rem #a3d39c;
+    background-color: #fff;
+    transition: background-color .3s, border-color .3s;
+}
+
+.flag-props {
+    word-break: break-word!important;
+}
+
+
+
+

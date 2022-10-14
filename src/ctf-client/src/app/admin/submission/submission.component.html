@@ -1,0 +1,155 @@
+<admin-jumbotron *ngIf="!type">Submissions</admin-jumbotron>
+<admin-jumbotron *ngIf="type === 'correct'">Correct Submissions</admin-jumbotron>
+<admin-jumbotron *ngIf="type === 'incorrect'">Incorrect Submissions</admin-jumbotron>
+
+<h5 *ngIf="this.optionalChallengeId" class="text-muted text-center">
+    Searching for submissions with <strong>challenge_id</strong> matching <strong>{{ this.optionalChallengeId }}</strong>
+</h5>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+            <select style="height: 45px !important;" #filterBy class="form-control w-100" id="field" name="field">
+                <option value="user">User</option>
+                <option value="school">School</option>
+                <option value="challenge">Challenge Name</option>
+                <option value="provided">Provided</option>
+            </select>
+        </div>
+        <div class="col-md-10">
+            <input style="height: 45px !important;" #query class="form-control w-100"
+                placeholder="Search for matching challenges" (keyup)="filter(query.value, filterBy.value)">
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="float-right pb-3">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-danger" title="" tooltip="Delete Submissions"
+                        placement="top" id="challenges-delete-button" data-original-title="Delete Submissions" (click)="openDeleteModal(delete)">
+                        <fa-icon [icon]="deleteIcon"></fa-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table id="userboard" class="table table-striped border">
+                <thead>
+                    <tr>
+                        <th class="border-right col-md-1" data-checkbox="">
+                            <div *ngIf="submissions.length != 0" class="form-check text-center">
+                                <input ngModel #name="ngModel" name="masterCheck" type="checkbox"
+                                    class="form-check-input" (change)="radioChangeMaster()">
+                            </div>
+                        </th>
+                        <th class="sort-col text-center col-md-1"><b>No</b> <i class="fas fa-sort"></i></th>
+                        <th class="sort-col px-0 col-md-1"><b>User <fa-icon [icon]="sortIcon"></fa-icon></b></th>
+                        <th class="sort-col px-0 col-md-2"><b>School <fa-icon [icon]="sortIcon"></fa-icon></b></th>
+                        <th class="sort-col px-0 col-md-2"><b>Challenge <fa-icon [icon]="sortIcon"></fa-icon></b></th>
+                        <th class="sort-col px-0 col-md-1"><b>Type <fa-icon [icon]="sortIcon"></fa-icon></b></th>
+                        <th class="sort-col px-0 col-md-2"><b>Provided <fa-icon [icon]="sortIcon"></fa-icon></b></th>
+                        <th class="sort-col text-center px-0 col-md-3"><b>Date <fa-icon [icon]="sortIcon"></fa-icon></b>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let submission of filteredSubmissions index as i">
+                        <td class="border-right col-md-1" data-checkbox="">
+                            <div class="form-check text-center">
+                                <input ngModel #name="ngModel" name="chk" type="checkbox" class="form-check-input"
+                                    (change)="radioChange(name.value, submission)">
+                            </div>
+                        </td>
+                        <td class="team-id text-center col-md-1" value="1">
+                            {{ i + 1 }}
+                        </td>
+
+                        <ng-container *ngIf="filterBy.value === 'user'; else notUser">
+                            <td class="sort-col px-0 col-md-1">
+                                <a [routerLink]="[submission.user]"
+                                    innerHtml='{{submission.user | textHighlight:query.value}}'>
+                                </a>
+                            </td>
+                        </ng-container>
+
+                        <ng-template #notUser>
+                            <td class="sort-col px-0  col-md-1">
+                                <a [routerLink]="[submission.user]" innerHtml="{{submission.user}}"></a>
+                            </td>
+                        </ng-template>
+
+                        <ng-container *ngIf="filterBy.value === 'school'; else notSchool">
+                            <td class="sort-col px-0  col-md-2">
+                                <a [routerLink]="[submission.school]"
+                                    innerHtml='{{submission.school | textHighlight:query.value}}'>
+                                </a>
+                            </td>
+                        </ng-container>
+
+                        <ng-template #notSchool>
+                            <td class="sort-col px-0  col-md-2">
+                                <a [routerLink]="[submission.school]" innerHtml="{{submission.school}}"></a>
+                            </td>
+                        </ng-template>
+
+                        <ng-container *ngIf="filterBy.value === 'challenge'; else notChallenge">
+                            <td class="sort-col px-0 col-md-2">
+                                <a [routerLink]="[submission.challenge]"
+                                    innerHtml='{{submission.challenge | textHighlight:query.value}}'>
+                                </a>
+                            </td>
+                        </ng-container>
+
+                        <ng-template #notChallenge>
+                            <td class="sort-col px-0 col-md-2">
+                                <a [routerLink]="[submission.challenge]" innerHtml="{{submission.challenge}}"></a>
+                            </td>
+                        </ng-template>
+
+                        <td class="sort-col px-0 col-md-1">
+                            <span innerHtml="{{submission.type.toLowerCase()}}"></span>
+                        </td>
+
+                        <ng-container *ngIf="filterBy.value === 'provided'; else notProvided">
+                            <td class="sort-col px-0  col-md-2">
+                                <span innerHtml='{{submission.provided | textHighlight:query.value}}'> >
+                                </span>
+                            </td>
+                        </ng-container>
+
+                        <ng-template #notProvided>
+                            <td class="sort-col px-0 col-md-2">
+                                <span innerHtml="{{submission.provided}}"></span>
+                            </td>
+                        </ng-template>
+
+                        <td class="sort-col px-0 col-md-3 text-center">
+                            <span innerHtml="{{submission.date}}"></span>
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<ng-template #delete>
+    <div class="modal-header">
+        <h5 class="modal-title">Delete Submissions</h5>
+        <button type="button" class="btn-close close pull-right" aria-label="Close"
+            (click)="modalRef?.hide()">
+            <span aria-hidden="true" class="visually-hidden">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <p>Are you sure you want to delete {{ selectedSubmissions.length }} submissions?</p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-danger" (click)="modalRef?.hide()">No</button>
+        <button class="btn btn-primary" (click)="deleteSubmissions()">Yes</button>
+    </div>
+</ng-template>

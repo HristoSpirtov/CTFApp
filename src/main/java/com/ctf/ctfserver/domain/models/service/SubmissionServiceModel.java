@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 @Setter
 public class SubmissionServiceModel {
 
+    private String id;
     private String user;
     private String school;
     private String challenge;

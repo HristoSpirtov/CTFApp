@@ -1,0 +1,109 @@
+<h3 class="text-center">Flags</h3>
+<table class="table table-striped default">
+    <thead>
+        <tr>
+            <th class="text-center col-md-1"><b>Type</b></th>
+            <th class="text-center col-md-4"><b>Flag</b></th>
+            <th class="text-center col-md-1"><b>Settings</b></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let flag of flags | async">
+            <td class="text-center col-md-1">
+                <span>static</span>
+            </td>
+            <td class="text-left col-md-4">
+                <span class="flag-props"><i>{{ flag.flag }}</i></span>
+            </td>
+            <td class="text-center col-md-1">
+                <fa-icon [icon]="editIcon" style="margin-right: 3px;" (click)="openEditFlagModal(edit, flag)"></fa-icon>
+                <fa-icon [icon]="deleteIcon" (click)="openDeleteFlagModal(delete, flag)"></fa-icon>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<button class="btn btn-success float-right" value="create-flag" (click)="openCreateFlagModal(create)">Create Flag</button>
+
+
+<!-- modals -->
+<ng-template #delete>
+    <div class="modal-header">
+        <h5 class="modal-title">Delete Flag</h5>
+        <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+            <span aria-hidden="true" class="visually-hidden">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <p>Are you sure you'd like to delete this flag?</p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-danger" (click)="modalRef?.hide()">No</button>
+        <button class="btn btn-primary"
+            (click)="deleteFlag(this.modalService.config.initialState?.['data1'])">Yes</button>
+    </div>
+</ng-template>
+
+<ng-template #create>
+    <div class="modal-header">
+        <h5 class="modal-title">Create Flag</h5>
+        <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+            <span aria-hidden="true" class="visually-hidden">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form #f="ngForm">
+            <div class="form-group">
+                <label>
+                    Choose Flag Type<br>
+                </label>
+                <select #type class="form-control custom-select" name="state" required>
+                    <option value="--" selected>--</option>
+                    <option value="static">static</option>
+                </select>
+            </div>
+
+            <div class="form-group" *ngIf="type.value === 'static'">
+                <label>
+                    Static:<br>
+                    <small class="form-text text-muted">
+                        Enter static flag data
+                    </small>
+                </label>
+                <input ngModel #flag="ngModel" type="text" class="form-control" name="flag" required>
+            </div>  
+        </form> 
+    </div>
+    <div class="modal-footer" *ngIf="type.value !== '--'">
+        <button class="btn btn-success" type="submit" value="Submit" (click)="createFlag(f.value)">Create Flag</button>
+    </div>
+</ng-template>
+
+<ng-template #edit>
+    <div class="modal-header">
+        <h5 class="modal-title">Edit Flag</h5>
+        <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+            <span aria-hidden="true" class="visually-hidden">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+
+        <form #f="ngForm">
+
+            <div class="form-group">
+                <label>
+                    Static:<br>
+                    <small class="form-text text-muted">
+                        Enter static flag data
+                    </small>
+                </label>
+                <input ngModel="{{ this.modalService.config.initialState?.['data1'] }}" #flag="ngModel" type="text" class="form-control" name="flag" required>
+            </div>  
+
+        </form> 
+
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-success" type="submit" value="Submit" (click)="updateFlag(f.value, this.modalService.config.initialState?.['data2'])">Update</button>
+    </div>
+</ng-template>
+

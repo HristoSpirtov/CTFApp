@@ -1,4 +1,4 @@
-<jumbotron>Challanges</jumbotron>
+<jumbotron>Challenges</jumbotron>
 
 <div class="container">
 
@@ -20,46 +20,71 @@
 </div>
 
 <ng-template #challengeModal>
+    
     <div class="modal-content">
-        <div class="modal-body">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				<span (click)="modalRef?.hide()">×</span>
-			</button>
-
-            <div role="tabpanel">
-                <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane fade active show" id="challenge">
-                        <h2 class="challenge-name text-center pt-3">
-                            {{ clickedChallange.name }}
-                        </h2>
-                        <h3 class="challenge-value text-center">
-                            {{ clickedChallange.value }}
-                        </h3>
-
-                        <span class="challenge-desc">
-                            <markdown [data]="clickedChallange.description"></markdown>
-                        </span>
-
-                        <div class="row submit-row">
-                            <div class="col-md-9 form-group">
-
-                                <input id="challenge-id" class="challenge-id" type="hidden" value="5">
-                                <input ngModel #name="ngModel" id="challenge-input" class="challenge-input form-control" type="text"
-                                    name="provided" placeholder="Flag">
-
-                            </div>
-                            <div class="col-md-3 form-group key-submit">
-
-                                <button id="challenge-submit" [disabled]="isSolvedByUser(clickedChallange)"
-                                    class="challenge-submit btn btn-md btn-outline-secondary float-right" style="padding: 15px 20px;" type="submit" (click)="submit(name.value)">
-                                    Submit
-                                </button>
+        <button style="margin-right: 5px; margin-left:auto;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span (click)="modalRef?.hide()">×</span>
+        </button>
+        <tabset style="margin: 30px; margin-top: 20px;">
+            <tab heading="Challenges" id="challenges">
+                <div class="modal-body">
+                    <div role="tabpanel">
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade active show" id="challenge">
+                                <h2 class="challenge-name text-center pt-3">
+                                    {{ clickedChallange.name }}
+                                </h2>
+                                <h3 class="challenge-value text-center">
+                                    {{ clickedChallange.value }}
+                                </h3>
+        
+                                <span class="challenge-desc">
+                                    <markdown [data]="clickedChallange.description"></markdown>
+                                </span>
+        
+                                <div class="row submit-row">
+                                    <div class="col-md-9 form-group">
+        
+                                        <input id="challenge-id" class="challenge-id" type="hidden" value="5">
+                                        <input ngModel #name="ngModel" id="challenge-input" class="challenge-input form-control" type="text"
+                                            name="provided" placeholder="Flag">
+        
+                                    </div>
+                                    <div class="col-md-3 form-group key-submit">
+        
+                                        <button id="challenge-submit" [disabled]="isSolvedByUser(clickedChallange)"
+                                            class="challenge-submit btn btn-md btn-outline-secondary float-right" style="padding: 15px 20px;" type="submit" (click)="submit(name.value)">
+                                            Submit
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </tab>
+            <tab heading="Solves" id="solves">
+                <table id="userboard" class="table table-striped cursor-custom">
+                    <thead>
+                        <tr>
+                            <th class="sort-col text-center col-md-4">Name</th>
+                            <th class="sort-col text-center col-md-8">Date</th>   
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let submission of curSolves">
+                            <td class="d-none text-center d-md-table-cell d-lg-table-cell col-md-4" value="">
+                                <span>{{ submission.user }}</span>
+                            </td> 
+                            <td class="d-none text-center d-md-table-cell d-lg-table-cell col-md-8" value="">
+                                <!-- todo link to user -->
+                                <span>{{ submission.date }}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </tab>
+        </tabset>
     </div>
 </ng-template>
 

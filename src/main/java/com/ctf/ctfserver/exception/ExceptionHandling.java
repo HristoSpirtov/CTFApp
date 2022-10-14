@@ -43,7 +43,18 @@ public class ExceptionHandling implements ErrorController { //implement error co
     public static final String USERS_EDITED_SUCCESSFULLY = "Users were successfully edited";
     public static final String CHALLENGE_CREATED_SUCCESSFULLY = "Challenge was successfully created";
 
+    public static final String CHALLENGES_DELETED_SUCCESSFULLY = "Challenges were successfully deleted";
 
+    public static final String CHALLENGE_EDITED_SUCCESSFULLY = "Challenge was successfully edited";
+    public static final String CHALLENGES_EDITED_SUCCESSFULLY = "Challenges were successfully edited";
+
+    public static final String FLAG_DELETED_SUCCESSFULLY = "Flag was successfully deleted";
+
+    public static final String FLAG_CREATED_SUCCESSFULLY = "Flag was successfully created";
+
+    public static final String FLAG_EDITED_SUCCESSFULLY = "Flag was successfully edited";
+
+    public static final String SUBMISSIONS_DELETED_SUCCESSFULLY = "Submissions were successfully deleted";
 
     @ExceptionHandler(DisabledException.class)
     public ResponseEntity<HttpResponse> accountDisabledException() {
@@ -132,7 +143,4 @@ public class ExceptionHandling implements ErrorController { //implement error co
         return new ResponseEntity<>(httpResponse, httpStatus);
 
     }
-
-
-
 }

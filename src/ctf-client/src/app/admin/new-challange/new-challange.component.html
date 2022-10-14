@@ -15,7 +15,7 @@
                         <div class="card-body">
                             <span class="card-title">
                                 <div class="form-check">
-                                    <input class="form-check-input card-radio-clone" type="radio"
+                                    <input #challengeType name="standard" class="form-check-input card-radio-clone" type="radio"
                                         style="visibility: hidden;" checked="">
                                     <span class="form-check-label">standard</span>
                                 </div>
@@ -28,7 +28,7 @@
         <div class="col-md-7">
             <div id="create-chal-entry-div">
 
-                <form #f="ngForm"(ngSubmit)="onSubmit(f.value)">
+                <form #f="ngForm" (ngSubmit)="onSubmit(f.value, challengeType.name)">
 
                     <div class="form-group">
                         <label>
@@ -37,7 +37,8 @@
                                 The name of your challenge
                             </small>
                         </label>
-                        <input ngModel #name="ngModel" type="text" class="form-control" name="name" placeholder="Enter challenge name">
+                        <input ngModel #name="ngModel" type="text" class="form-control" name="name"
+                            placeholder="Enter challenge name" required>
                     </div>
 
 
@@ -50,17 +51,23 @@
                         </label>
 
                         <div class="editor-toolbar">
-                            <button class="btn btn-primary" type="button" tooltip="Swich to Preview"
-                            placement="top" (click)="switchToMark()"><fa-icon [icon]="switchViewIcon"></fa-icon></button>
-                            <button class="btn btn-primary" type="button" tooltip="Cheat Sheet"
-                            placement="top" style="margin-left : 10px" (click)="onNavigate()"><fa-icon [icon]="redirectToCheatSheet"></fa-icon></button>
+                            <button class="btn btn-primary" type="button" tooltip="Swich to Preview" placement="top"
+                                (click)="switchToMark()">
+                                <fa-icon [icon]="switchViewIcon"></fa-icon>
+                            </button>
+                            <button class="btn btn-primary" type="button" tooltip="Cheat Sheet" placement="top"
+                                style="margin-left : 10px" (click)="onNavigate()">
+                                <fa-icon [icon]="redirectToCheatSheet"></fa-icon>
+                            </button>
                         </div>
-                            <textarea name="description" *ngIf="!isSwitched;" class="textarea" wrap="hard" [(ngModel)]="markdown"  appTextareaAutoresize></textarea>
-                            
-                            <div style="border : solid 1px rgb(118, 118, 118); border-top: 0px;" class="textarea" *ngIf="isSwitched;">
-                                <markdown  [data]="markdown"></markdown>
-                            </div>
+                        <textarea name="description" *ngIf="!isSwitched;" class="textarea" wrap="hard"
+                            [(ngModel)]="markdown" appTextareaAutoresize></textarea>
+
+                        <div style="border : solid 1px rgb(118, 118, 118); border-top: 0px;" class="textarea"
+                            *ngIf="isSwitched;">
+                            <markdown [data]="markdown"></markdown>
                         </div>
+                    </div>
 
                     <div class="form-group">
                         <label>
@@ -69,7 +76,26 @@
                                 This is how many points are rewarded for solving this challenge.
                             </small>
                         </label>
-                        <input ngModel #name="ngModel" type="number" class="form-control" name="value" placeholder="Enter value" required="">
+                        <input ngModel #name="ngModel" type="number" class="form-control" name="value"
+                            placeholder="Enter value" required>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>
+                            Participants:<br>
+                            <small class="form-text text-muted">
+                                Who can participate in this challenge.
+                            </small>
+                        </label>
+                        <div>
+                            <button type="button" class="btn btn-primary" tooltip="Add Participants"
+                            placement="top" id="add-participants-button" data-original-title="Add Participants"
+                            (click)="openParticipantsModal(edit)">
+                            <fa-icon [icon]="userPlusIcon"></fa-icon>
+                            </button>
+                        </div>
+                            
                     </div>
                     <div class="form-group">
                         <label>
@@ -78,16 +104,40 @@
                                 Static flag for your challenge.
                             </small>
                         </label>
-                        <input ngModel #name="ngModel" type="text" class="form-control" name="flag" placeholder="Enter flag value" required="">
+                        <input ngModel #name="ngModel" type="text" class="form-control" name="flag"
+                            placeholder="Enter flag value" required>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            State:<br>
+                            <small class="form-text text-muted">
+                                Should the challenge be visible to users.
+                            </small>
+                        </label>
+                        <select ngModel #state="ngModel" class="form-control custom-select" name="state" required>
+                            <option value="visible">Visible</option>
+                            <option value="hidden" selected="">Hidden</option>
+                        </select>
                     </div>
 
                     <div class="form-group">
-                        <input class="btn btn-primary float-right create-challenge-submit"
-                            type="submit" value="Create" [disabled]="!f.valid">
+                        <input class="btn btn-primary float-right create-challenge-submit" type="submit" value="Create"
+                            [disabled]="!f.valid">
                     </div>
-
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+<ng-template #edit>
+    <div class="modal-header">
+        <h5 class="modal-title">Add Participants</h5>
+        <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+            <span aria-hidden="true" class="visually-hidden">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <app-sortable [notParticipatingUsers]="notParticipatingUsers" [participatingUsers]="participatingUsers" (itemPushEventPart)="pushItmEventPart($event)"></app-sortable>
+    </div>
+</ng-template>

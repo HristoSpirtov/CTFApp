@@ -15,20 +15,26 @@ import { JumbotronComponent } from './jumbotron/jumbotron.component';
 import { AdminJumbotronComponent } from './admin-jumbotron/admin-jumbotron.component';
 import { TextareaAutoresizeDirective } from '../shared/textarea-autoresize.directive';
 import { LineBreaksPipe } from './line-breaks.pipe';
-
-
+import { SortableComponent } from './sortable/sortable.component';
+import { SortableModule } from 'ngx-bootstrap/sortable';
+import { TextHighlightPipe } from './text-highlight.pipe';
+import { FooterComponent } from './footer/footer.component';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 
 
 @NgModule({
   declarations: [
+    SortableComponent,
     JumbotronComponent,
     AdminJumbotronComponent,
     TextareaAutoresizeDirective,
-    LineBreaksPipe
+    LineBreaksPipe,
+    TextHighlightPipe,
+    FooterComponent
   ],
   imports: [
-
+    SortableModule.forRoot(),
     CommonModule,
     FormsModule,
     HttpClientModule,
@@ -39,9 +45,10 @@ import { LineBreaksPipe } from './line-breaks.pipe';
     RouterModule,
     TooltipModule,
     ModalModule,
-    
+    BsDropdownModule
   ],
   exports : [
+    SortableComponent,
     TextareaAutoresizeDirective,
     JumbotronComponent,
     FormsModule,
@@ -53,8 +60,11 @@ import { LineBreaksPipe } from './line-breaks.pipe';
     AdminJumbotronComponent,
     RouterModule,
     TooltipModule,
-    LineBreaksPipe
+    LineBreaksPipe,
+    TextHighlightPipe,
+    FooterComponent,
+    BsDropdownModule
   ], 
-  providers : []
+  providers : [],
 })
 export class SharedModule { }

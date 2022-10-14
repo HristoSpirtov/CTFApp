@@ -25,7 +25,7 @@ public class Submission extends BaseEntity{
     private String school;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "challenge_id", nullable = false)
+    @JoinColumn(name = "challenge_id")
     private Challenge challenge;
 
     @Enumerated(EnumType.STRING)
@@ -37,6 +37,4 @@ public class Submission extends BaseEntity{
 
     @Column(name = "date")
     private Timestamp date;
-
-
 }

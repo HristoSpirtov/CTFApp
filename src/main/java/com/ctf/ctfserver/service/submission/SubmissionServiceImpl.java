@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +42,7 @@ public class SubmissionServiceImpl implements SubmissionService {
         submission.setProvided(submissionServiceModel.getProvided());
         List<Flag> flags = this.flagRepository.findAllByChallengeId(challenge.getId());
 
-        long count = flags.stream().map(f -> f.getFlag())
+        long count = flags.stream().map(Flag::getFlag)
                 .filter(f -> f.equals(submissionServiceModel.getProvided()))
                 .count();
 
@@ -51,22 +52,36 @@ public class SubmissionServiceImpl implements SubmissionService {
             submission.setType(SubmissionType.INCORRECT);
         }
 
-//        SubmissionServiceModel saved = mapSavedSubmissionToServiceModel(this.submissionRepository.save(submission));
-
-
-
-        return SubmissionMapper.INSTANCE.submissionToSubmissionServiceModel(this.submissionRepository.save(submission));
+        return SubmissionMapper.INSTANCE
+                .submissionToSubmissionServiceModel(this.submissionRepository.save(submission));
 
     }
 
-//    private SubmissionServiceModel mapSavedSubmissionToServiceModel(Submission submission) {
-//        SubmissionServiceModel submissionServiceModel = new SubmissionServiceModel();
-//        submissionServiceModel.setUser(submission.getUser().getUsername());
-//        submissionServiceModel.setChallenge(submission.getChallenge().getName());
-//        submissionServiceModel.setType(submission.getType().name());
-//        submissionServiceModel.setSchool(submission.getSchool());
-//        submissionServiceModel.setProvided(submission.getProvided());
-//        submissionServiceModel.setDate(submission.getDate());
-//        return submissionServiceModel;
-//    }
+    @Override
+    public List<SubmissionServiceModel> getSubmissions(String type, String id) {
+
+        if(!id.equals("undefined")) {
+            return this.submissionRepository
+                .findAllByType(SubmissionType.valueOf(type)).stream()
+                .filter(submission -> submission.getChallenge().getId().equals(id))
+                .map(SubmissionMapper.INSTANCE::submissionToSubmissionServiceModel)
+                .collect(Collectors.toList());
+        }
+        if(type.equals("UNDEFINED")) {
+            return this.submissionRepository.findAll().stream()
+                .map(SubmissionMapper.INSTANCE::submissionToSubmissionServiceModel)
+                .collect(Collectors.toList());
+        }
+        return this.submissionRepository
+            .findAllByType(SubmissionType.valueOf(type)).stream()
+            .map(SubmissionMapper.INSTANCE::submissionToSubmissionServiceModel)
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteSubmissions(List<String> submissionServiceModels) {
+
+        submissionServiceModels.forEach(this.submissionRepository::deleteSubmissions);
+    }
+
 }

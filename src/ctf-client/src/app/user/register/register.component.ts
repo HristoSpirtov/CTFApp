@@ -24,7 +24,7 @@ export class RegisterComponent implements OnInit {
   isLoggedIn!: boolean;
   subscription : Subscription
   
-
+  
   constructor(private router : Router, private authenticationService : AuthenticationService, private notificationService : NotificationService) {
     this.subscription = this.authenticationService.isLoggedIn().subscribe(x => {
       this.isLoggedIn = x;

@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
     <div class="container">
-        <a routerLink="/challenges" class="navbar-brand">CTFa</a>
+        <a routerLink="/challenges" class="navbar-brand default">CTFa</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#base-navbars"
             aria-controls="base-navbars" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -14,15 +14,16 @@
                 <li class="nav-item"><a class="nav-link" routerLink="/admin/teams">Teams</a></li>
                 <li class="nav-item"><a class="nav-link" routerLink="/admin/scoreboard">Scoreboard</a></li>
                 <li class="nav-item"><a class="nav-link" routerLink="/admin/challenges">Challenges</a></li>
-                <li class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
-                        aria-haspopup="true" aria-expanded="true">Submissions</a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" routerLink="/admin/submissions">All Submissions</a>
-                        <a class="dropdown-item" routerLink="/admin/submissions/correct">Correct Submissions</a>
-                        <a class="dropdown-item" routerLink="/admin/submissions/incorrect">Incorrect Submissions</a>
+                <li class="nav-item dropdown" dropdown>
+                    <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown" dropdownToggle>
+                        Submissions
+                    </a>
+                    <div class="dropdown-menu" *dropdownMenu>
+                      <a class="dropdown-item" routerLink="/admin/submissions">All Submissions</a>
+                      <a class="dropdown-item" routerLink="/admin/submissions/correct">Correct Submissions</a>
+                      <a class="dropdown-item" routerLink="/admin/submissions/incorrect">Incorrect Submissions</a>
                     </div>
-                </li>
+                  </li>
             </ul>
         </div>
     </div>

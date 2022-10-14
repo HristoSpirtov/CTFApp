@@ -8,3 +8,19 @@
     opacity: .4;
     border: none;
 }
+
+b {
+    font-weight: bolder;
+}
+
+.table {
+    cursor: pointer;
+}
+
+tr, th {
+    border: 0px;
+}
+
+.cursor-custom {
+    cursor: auto !important;
+}

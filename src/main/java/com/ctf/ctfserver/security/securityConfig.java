@@ -5,7 +5,6 @@ import com.ctf.ctfserver.filter.JWTAccessDeniedHandler;
 import com.ctf.ctfserver.filter.JWTAuthenticationEntryPoint;
 import com.ctf.ctfserver.filter.JWTAuthenticationFilter;
 import com.ctf.ctfserver.filter.JWTAuthorizationFilter;
-import com.ctf.ctfserver.service.user.UserService;
 import com.ctf.ctfserver.utility.JWTTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -23,15 +22,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
-
 import java.util.Arrays;
 import java.util.List;
-
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
 
 @Configuration
 @EnableWebSecurity
@@ -41,7 +33,6 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
-
     private final JWTAuthorizationFilter jwtAuthorizationFilter;
     private final JWTAccessDeniedHandler jwtAccessDeniedHandler;
     private final JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint;

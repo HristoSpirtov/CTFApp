@@ -1,0 +1,16 @@
+.dropdown-item {
+    color: #212529 !important;
+    
+}
+
+.nav-link {
+    cursor : pointer;
+}
+
+a:hover {
+    color:#ffffffaa !important;
+}
+
+a.default {
+    color: white !important;
+}

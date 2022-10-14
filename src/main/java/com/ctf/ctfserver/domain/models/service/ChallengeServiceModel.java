@@ -16,4 +16,7 @@ public class ChallengeServiceModel {
     private Integer value;
     private String flag;
     private Collection<SubmissionServiceModel> submissions;
+    private Collection<UserServiceModel> participants;
+    private String type;
+    private String state;
 }

@@ -14,9 +14,11 @@ import { NewUserComponent } from './new-user/new-user.component';
 import { AdminChallengesComponent } from './admin-challenges/admin-challenges.component';
 
 
-
 import 'prismjs';
 import 'prismjs/components/prism-typescript.min.js';
+import { AdminEditChallengeComponent } from './admin-edit-challenge/admin-edit-challenge.component';
+import { AdminFlagComponent } from './admin-flag/admin-flag.component';
+import { SubmissionComponent } from './submission/submission.component';
 
 
 
@@ -29,6 +31,11 @@ const routes : Routes = [
     { path : 'users/new', component : NewUserComponent },
     { path : 'challenges', component : AdminChallengesComponent },
     { path : 'challenges/new', component : NewChallangeComponent },
+    { path : 'challenges/:id', component : AdminEditChallengeComponent },
+    { path : 'submissions/correct/:id', component : SubmissionComponent },
+    { path : 'submissions/correct', component : SubmissionComponent },
+    { path : 'submissions/incorrect', component : SubmissionComponent },
+    { path : 'submissions', component : SubmissionComponent },
   ]}
 ]
 
@@ -41,7 +48,9 @@ const routes : Routes = [
     AdminChallengesComponent,
     NewChallangeComponent,
     NewUserComponent,
-  
+    AdminEditChallengeComponent,
+    AdminFlagComponent,
+    SubmissionComponent,
   ],
   imports: [
     FormsModule,
@@ -50,6 +59,6 @@ const routes : Routes = [
     SharedModule,
     RouterModule.forChild(routes),
     MarkdownModule.forRoot()
-  ]
+  ],
 })
 export class AdminModule { }

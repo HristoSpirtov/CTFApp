@@ -1,10 +1,10 @@
 import { Router } from '@angular/router';
 import { NotificationType } from './../../shared/enum/notification-type.enum';
 import { NotificationService } from './../../shared/service/notification.service';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { faPencilAlt, faPlusCircle, faSort, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { UserService } from './../../shared/service/user.service';
-import { Component, OnInit, TemplateRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, TemplateRef, OnDestroy, HostBinding } from '@angular/core';
 import { User } from 'src/app/shared/model/user';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
@@ -24,6 +24,7 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
   editIcon = faPencilAlt;
   sortIcon = faSort;
 
+  isMasterSelected! : boolean;
   users : User[]
   filteredUsers! : User[]
   subscription! : Subscription;
@@ -43,7 +44,6 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
     } else {
       this.filteredUsers = (query) ? this.users.filter(u => u.school.toLowerCase().includes(query.toLowerCase())) : this.users;
     }
-      
   }
 
   openDeleteModal(template: TemplateRef<any>) {
@@ -55,6 +55,7 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.isMasterSelected = false;
     this.selectedUsers = [];
     this.subscription = this.userService.getUsers().subscribe(users => {
       users.forEach( user => {
@@ -69,18 +70,7 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  radioChange(isCheked : boolean, user : User) {
-    if(isCheked) {
-      this.selectedUsers.push(user)
-    } else {
-      this.selectedUsers.forEach((value,index) => {
-        if(value.id == user.id) {
-          this.selectedUsers.splice(index, 1)
-        }
-      });
-    }
-    this.selectedUsers.forEach(x => console.log(x));
-  }
+  
 
   deleteUsers() {
     if(this.selectedUsers.length > 0) {
@@ -109,7 +99,7 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
           cloned[index].hidden = loginForm.hidden !="" ?  loginForm.hidden : user.hidden;
         })
         this.userService.editUsers(cloned).subscribe(response => {
-          // this.userService.getUsers().subscribe(users => {this.users = users});
+          
           this.modalRef?.hide();
           this.notificationService.notify(NotificationType.SUCCESS, response.message);
           this.selectedUsers = [];
@@ -121,4 +111,36 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
       }
     }
   }
+
+  radioChange(isCheked : boolean, user : User) {
+    if(isCheked && user.roles.length !== 2) {
+      this.selectedUsers.push(user);
+    } else {
+      this.selectedUsers.forEach((value,index) => {
+        if(value.id == user.id) {
+          this.selectedUsers.splice(index, 1);
+        }
+      });
+    }
+  }
+
+  radioChangeMaster() {
+    this.isMasterSelected = !this.isMasterSelected;
+    let checkboxes = document.getElementsByName('chk');
+      checkboxes.forEach(ch => {
+        let current = ch as HTMLInputElement;
+        current.checked = this.isMasterSelected; 
+      })
+      this.selectedUsers = [];
+    if(this.isMasterSelected) {
+      this.users.forEach(u => {
+        if(u.roles.length === 1) {
+          this.selectedUsers.push(u);
+        }
+        
+      });
+      
+    } 
+  }
+
 }

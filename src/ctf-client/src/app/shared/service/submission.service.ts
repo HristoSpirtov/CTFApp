@@ -9,6 +9,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class SubmissionService {
+  
   private host;
 
   constructor(private http: HttpClient, private authenticationService : AuthenticationService) {
@@ -21,7 +22,15 @@ export class SubmissionService {
       submission.school = u?.school!
     })
     return this.http.post<any>(`${this.host}/api/submission/new`, submission)
-    
-    
+  }
+
+  public getSubmissions(type : string, challengeId : string) : Observable<Submission[]> {
+    return this.http.get<any>(`${this.host}/api/submissions/all/${type}/${challengeId}`)
+  }
+
+  deleteSubmissions(selectedSubmissions: Submission[]) {
+    let arr : string[] = [];
+    selectedSubmissions.forEach(sub => arr.push(sub.id));
+    return this.http.post<any>(`${this.host}/api/submissions/delete`, arr);
   }
 }
