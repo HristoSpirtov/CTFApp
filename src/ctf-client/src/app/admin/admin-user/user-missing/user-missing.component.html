@@ -1,0 +1,72 @@
+<h3 class="text-center" style="padding-top: 3rem!important;">Missing</h3>
+<div class="row">
+    <div class="col-md-12">
+        <div class="float-right pb-3">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-success" title="" tooltip="Solve Challenges" placement="top"
+                    id="challenges-delete-button" data-original-title="Delete Subission" (click)="openSolveModal(solve)">
+                    <fa-icon [icon]="solveIcon"></fa-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table id="userboard" class="table table-striped border">
+            <thead>
+                <tr>
+                    <th class="border-right col-md-1" data-checkbox="">
+                        <div *ngIf="challenges && challenges.length != 0" class="form-check text-center">
+                            <input ngModel #name="ngModel" name="masterCheck" type="checkbox" class="form-check-input"
+                                (change)="radioChangeMaster()">
+                        </div>
+                    </th>
+                    <th class="sort-col text-center px-0 col-md-5"><b>Challenge <fa-icon [icon]="sortIcon"></fa-icon></b></th>
+                    <th class="sort-col text-center px-0 col-md-5"><b>Category <fa-icon [icon]="sortIcon"></fa-icon></b></th>
+                    <th class="sort-col text-center px-0 col-md-1"><b>Value <fa-icon [icon]="sortIcon"></fa-icon></b></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let challenge of challenges">
+                    <td class="border-right col-md-1" data-checkbox="">
+                        <div class="form-check text-center">
+                            <input ngModel #name="ngModel" name="chk" type="checkbox" class="form-check-input"
+                                (change)="radioChange(name.value, challenge)">
+                        </div>
+                    </td>
+
+                    <td class="sort-col text-center px-0 col-md-5">
+                        <a [routerLink]="['/admin/challenges/', challenge.id]">{{challenge.name}}
+                        </a>
+                    </td>
+
+                    <td class="sort-col text-center px-0 col-md-5">
+                        <span>Category</span>
+                    </td>
+
+                    <td class="sort-col text-center px-0 col-md-1">
+                        <span>{{ challenge.value }}</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<ng-template #solve>
+    <div class="modal-header">
+        <h5 class="modal-title">Mark Correct</h5>
+        <button type="button" class="btn-close close pull-right" aria-label="Close"
+            (click)="modalRef?.hide()">
+            <span aria-hidden="true" class="visually-hidden">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <p>Are you sure you want to mark {{ selectedChallenges.length }} cahllenges correct for <b>{{ username }}</b>? </p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-danger" (click)="modalRef?.hide()">No</button>
+        <button class="btn btn-primary" (click)="solveChallenges()">Yes</button>
+    </div>
+</ng-template>

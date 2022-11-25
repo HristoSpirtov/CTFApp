@@ -4,14 +4,10 @@ import com.ctf.ctfserver.domain.entities.User;
 import com.ctf.ctfserver.domain.UserPrincipal;
 import com.ctf.ctfserver.domain.models.mapper.UserMapper;
 import com.ctf.ctfserver.domain.models.service.UserServiceModel;
-import com.ctf.ctfserver.exception.domain.UserNotFoundException;
-import com.ctf.ctfserver.exception.domain.UsernameExistsException;
 import com.ctf.ctfserver.repository.UserRepository;
 import com.ctf.ctfserver.service.role.RoleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -77,7 +73,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
         User user = UserMapper.INSTANCE.userServiceModelToUser(userServiceModel);
         user.setVerified(true);
-        user.setHidden(false);
+        if (this.userRepository.count() == 0) {
+            user.setHidden(true);
+        } else {
+            user.setHidden(false);
+        }
         user.setBanned(true);
         user.setPassword(encodePassword(userServiceModel.getPassword()));
 
@@ -94,11 +94,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public void editUsers(List<UserServiceModel> userServiceModels) {
         userServiceModels.forEach(user -> {
             this.userRepository.findById(user.getId()).
-                    ifPresent(found -> {
-                        found.setHidden(user.isHidden());
-                        found.setBanned(user.isBanned());
-                    });
+                ifPresent(found -> {
+                    found.setHidden(user.isHidden());
+                    found.setBanned(user.isBanned());
+                });
         });
+    }
+
+    @Override
+    public UserServiceModel getUserById(String id) {
+        return UserMapper.INSTANCE.userToUserServiceModel(this.userRepository.findById(id).get());
     }
 
     private String encodePassword(String password) {

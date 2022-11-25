@@ -77,8 +77,6 @@ export class AdminChallengesComponent implements OnInit, OnDestroy {
         }
       });
     }
-    
-    
   }
 
   radioChangeMaster() {

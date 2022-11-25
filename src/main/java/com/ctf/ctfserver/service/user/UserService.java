@@ -17,4 +17,6 @@ public interface UserService {
     void deleteUsers(List<UserServiceModel> userServiceModels);
 
     void editUsers(List<UserServiceModel> userServiceModels);
+
+    UserServiceModel getUserById(String id);
 }

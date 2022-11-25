@@ -2,7 +2,7 @@
 import { ChallengeService } from './shared/service/challenge.service';
 import { FormsModule } from '@angular/forms';
 import { AuthInterceptor } from './shared/interceptor/auth.interceptor';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { UserService } from './shared/service/user.service';
 import { AuthenticationService } from './shared/service/authentication.service';
 import { NotificationService } from './shared/service/notification.service';

@@ -50,8 +50,8 @@
                         <th class="sort-col px-0 col-md-2"><b>School <fa-icon [icon]="sortIcon"></fa-icon></b></th>
                         <th class="sort-col px-0 col-md-2"><b>Challenge <fa-icon [icon]="sortIcon"></fa-icon></b></th>
                         <th class="sort-col px-0 col-md-1"><b>Type <fa-icon [icon]="sortIcon"></fa-icon></b></th>
-                        <th class="sort-col px-0 col-md-2"><b>Provided <fa-icon [icon]="sortIcon"></fa-icon></b></th>
-                        <th class="sort-col text-center px-0 col-md-3"><b>Date <fa-icon [icon]="sortIcon"></fa-icon></b>
+                        <th class="sort-col px-0 col-md-1"><b>Provided <fa-icon [icon]="sortIcon"></fa-icon></b></th>
+                        <th class="sort-col text-center px-0 col-md-4"><b>Date <fa-icon [icon]="sortIcon"></fa-icon></b>
                         </th>
                     </tr>
                 </thead>
@@ -114,19 +114,19 @@
                         </td>
 
                         <ng-container *ngIf="filterBy.value === 'provided'; else notProvided">
-                            <td class="sort-col px-0  col-md-2">
+                            <td class="sort-col px-0  col-md-2 flag-props">
                                 <span innerHtml='{{submission.provided | textHighlight:query.value}}'> >
                                 </span>
                             </td>
                         </ng-container>
 
                         <ng-template #notProvided>
-                            <td class="sort-col px-0 col-md-2">
+                            <td class="sort-col px-0 col-md-1 flag-props">
                                 <span innerHtml="{{submission.provided}}"></span>
                             </td>
                         </ng-template>
 
-                        <td class="sort-col px-0 col-md-3 text-center">
+                        <td class="sort-col px-0 col-md-4 text-center">
                             <span innerHtml="{{submission.date}}"></span>
                         </td>
 

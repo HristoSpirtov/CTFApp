@@ -54,7 +54,6 @@ export class AdminEditChallengeComponent implements OnInit {
           return u.id === p.id;
         });
       });  
-      console.log(this.challenge);    
     }) 
     
     

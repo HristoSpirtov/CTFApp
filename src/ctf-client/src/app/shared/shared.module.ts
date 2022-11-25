@@ -1,5 +1,3 @@
-
-
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { RouterModule } from '@angular/router';
@@ -20,6 +18,9 @@ import { SortableModule } from 'ngx-bootstrap/sortable';
 import { TextHighlightPipe } from './text-highlight.pipe';
 import { FooterComponent } from './footer/footer.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { NgxEchartsModule } from 'ngx-echarts';
+import { PieChartComponent } from './chart/pie-chart/pie-chart.component';
+import { LineChartComponent } from './chart/line-chart/line-chart.component';
 
 
 
@@ -31,7 +32,9 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
     TextareaAutoresizeDirective,
     LineBreaksPipe,
     TextHighlightPipe,
-    FooterComponent
+    FooterComponent,
+    PieChartComponent,
+    LineChartComponent, 
   ],
   imports: [
     SortableModule.forRoot(),
@@ -45,7 +48,10 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
     RouterModule,
     TooltipModule,
     ModalModule,
-    BsDropdownModule
+    BsDropdownModule,
+    NgxEchartsModule.forRoot({
+      echarts: () => import('echarts'),
+    })
   ],
   exports : [
     SortableComponent,
@@ -63,7 +69,10 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
     LineBreaksPipe,
     TextHighlightPipe,
     FooterComponent,
-    BsDropdownModule
+    BsDropdownModule,
+    NgxEchartsModule,
+    PieChartComponent,
+    LineChartComponent
   ], 
   providers : [],
 })

@@ -15,7 +15,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "submissions")
-public class Submission extends BaseEntity{
+public class Submission extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -37,4 +37,5 @@ public class Submission extends BaseEntity{
 
     @Column(name = "date")
     private Timestamp date;
+
 }

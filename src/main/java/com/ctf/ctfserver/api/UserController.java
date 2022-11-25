@@ -47,6 +47,15 @@ public class UserController extends ExceptionHandling {
         return ResponseEntity.ok().body(allUsers);
     }
 
+    @GetMapping("/users/{id}")
+    @PreAuthorize("hasRole('ROLE_ROOT')")
+    public ResponseEntity<UserResponseModel>getUserById(@PathVariable String id) {
+
+        UserResponseModel user = UserMapper.INSTANCE.userServiceModelToUserResponseModel(userService.getUserById(id));
+
+        return ResponseEntity.ok().body(user);
+    }
+
 
     @PostMapping("/users/delete")
     @PreAuthorize("hasRole('ROLE_ROOT')")

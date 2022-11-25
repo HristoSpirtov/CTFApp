@@ -9,12 +9,12 @@
         </h5>
         <h3 class="text-center">{{challenge.value}} points</h3>
         <div class="pt-3">
-            <fa-icon class="inContainer" [icon]="fileAltIcon" tooltip="Preview Challenge" placement="top"
+            <fa-icon class="inContainer text-dark" [icon]="fileAltIcon" tooltip="Preview Challenge" placement="top"
             (click)="openPreviewModal(previewModal)"></fa-icon>
-            <fa-icon class="inContainer" [icon]="tasktsIcon" tooltip="Correct Submissions" placement="top" 
+            <fa-icon class="inContainer text-dark" [icon]="tasktsIcon" tooltip="Correct Submissions" placement="top" 
                 (click)="redirect(challenge.id)"></fa-icon>
             <!-- <fa-icon class="inContainer" [icon]="commentsIcon" tooltip="Comments" placement="top"></fa-icon> -->
-            <fa-icon class="inContainer" [icon]="trashIcon" tooltip="Delete Challenge" placement="top"
+            <fa-icon class="inContainer text-dark" [icon]="trashIcon" tooltip="Delete Challenge" placement="top"
                 (click)="openDeleteChallengeModal(delete)"></fa-icon>
         </div>
     </div>

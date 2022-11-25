@@ -57,3 +57,7 @@ a[ng-reflect-router-link] {
 h5 {
     margin: 30px;
 }
+
+.flag-props {
+    word-break: break-word!important;
+}

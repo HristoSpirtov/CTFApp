@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class UserService {
+  
   private host;
   
   constructor(private http: HttpClient, ) {
@@ -24,6 +25,10 @@ export class UserService {
 
   public editUsers(selectedUsers : User[]) : Observable<any> {
     return this.http.patch<any>(`${this.host}/api/users/edit`, selectedUsers);
+  }
+
+  public getUserByid(id : string): Observable<User> {
+    return this.http.get<User>(`${this.host}/api/users/${id}`)
   }
 
 

@@ -57,6 +57,17 @@ public class ChallengeController {
         return ResponseEntity.ok().body(allChallengesForUser);
     }
 
+    @GetMapping("/challenge/missing/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<ChallengeResponseModel>> getAllMissingChallengesForUser(@PathVariable String id) {
+
+        List<ChallengeResponseModel> allChallengesForUser =
+                this.challengeService.getAllMissingChallengesForUser(id).stream()
+                        .map(ChallengeMapper.INSTANCE::ChallengeServiceModelToChallengeResponseModel)
+                        .collect(Collectors.toList());
+        return ResponseEntity.ok().body(allChallengesForUser);
+    }
+
     @GetMapping("/challenge/all")
     @PreAuthorize("hasRole('ROLE_ROOT')")
     public ResponseEntity<List<ChallengeServiceModel>> getAllChallenges() {

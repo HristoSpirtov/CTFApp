@@ -19,6 +19,10 @@ import 'prismjs/components/prism-typescript.min.js';
 import { AdminEditChallengeComponent } from './admin-edit-challenge/admin-edit-challenge.component';
 import { AdminFlagComponent } from './admin-flag/admin-flag.component';
 import { SubmissionComponent } from './submission/submission.component';
+import { AdminUserComponent } from './admin-user/admin-user.component';
+import { UserSolvesComponent } from './admin-user/user-solves/user-solves.component';
+import { UserFailsComponent } from './admin-user/user-fails/user-fails.component';
+import { UserMissingComponent } from './admin-user/user-missing/user-missing.component';
 
 
 
@@ -29,6 +33,7 @@ const routes : Routes = [
     { path : 'statistics', component : StatisticsComponent },
     { path : 'users', component : AdminUsersComponent },
     { path : 'users/new', component : NewUserComponent },
+    { path : 'users/:id', component : AdminUserComponent },
     { path : 'challenges', component : AdminChallengesComponent },
     { path : 'challenges/new', component : NewChallangeComponent },
     { path : 'challenges/:id', component : AdminEditChallengeComponent },
@@ -51,6 +56,10 @@ const routes : Routes = [
     AdminEditChallengeComponent,
     AdminFlagComponent,
     SubmissionComponent,
+    AdminUserComponent,
+    UserSolvesComponent,
+    UserFailsComponent,
+    UserMissingComponent,
   ],
   imports: [
     FormsModule,

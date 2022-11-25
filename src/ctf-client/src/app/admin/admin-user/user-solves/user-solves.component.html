@@ -1,0 +1,82 @@
+<h3 class="text-center" style="padding-top: 3rem!important;">Solves</h3>
+<div class="row">
+    <div class="col-md-12">
+        <div class="float-right pb-3">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-danger" title="" tooltip="Delete Subissions" placement="top"
+                    id="challenges-delete-button" data-original-title="Delete Subission" (click)="openDeleteModal(delete)">
+                    <fa-icon [icon]="deleteIcon"></fa-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table id="userboard" class="table table-striped border">
+            <thead>
+                <tr>
+                    <th class="border-right col-md-1" data-checkbox="">
+                        <div *ngIf="solves && solves.length != 0" class="form-check text-center">
+                            <input ngModel #name="ngModel" name="masterCheck" type="checkbox" class="form-check-input"
+                                (change)="radioChangeMaster()">
+                        </div>
+                    </th>
+                    <th class="sort-col text-center px-0 col-md-2"><b>Challenge <fa-icon [icon]="sortIcon"></fa-icon></b></th>
+                    <th class="sort-col text-center px-0 col-md-2"><b>Submitted <fa-icon [icon]="sortIcon"></fa-icon></b></th>
+                    <th class="sort-col text-center px-0 col-md-2"><b>Category <fa-icon [icon]="sortIcon"></fa-icon></b></th>
+                    <th class="sort-col text-center px-0 col-md-1"><b>Value <fa-icon [icon]="sortIcon"></fa-icon></b></th>
+                    <th class="sort-col text-center px-0 col-md-4"><b>Time <fa-icon [icon]="sortIcon"></fa-icon></b></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let solve of solves">
+                    <td class="border-right col-md-1" data-checkbox="">
+                        <div class="form-check text-center">
+                            <input ngModel #name="ngModel" name="chk" type="checkbox" class="form-check-input"
+                                (change)="radioChange(name.value, solve)">
+                        </div>
+                    </td>
+
+                    <td class="sort-col text-center px-0 col-md-2">
+                        <a [routerLink]="['/admin/challenges/', solve.challengeId]">{{solve.challenge}}
+                        </a>
+                    </td>
+
+                    <td class="sort-col text-center px-0 col-md-2 min-font">
+                        <span>{{ solve.provided }}</span>
+                    </td>
+
+                    <td class="sort-col text-center px-0 col-md-2">
+                        <span>Category</span>
+                    </td>
+
+                    <td class="sort-col text-center px-0 col-md-1">
+                        <span>{{ solve.value }}</span>
+                    </td>
+                    
+                    <td class="sort-col text-center px-0 col-md-4">
+                        <span>{{ solve.date }}</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<ng-template #delete>
+    <div class="modal-header">
+        <h5 class="modal-title">Delete Solves</h5>
+        <button type="button" class="btn-close close pull-right" aria-label="Close"
+            (click)="modalRef?.hide()">
+            <span aria-hidden="true" class="visually-hidden">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <p>Are you sure you want to delete {{ selectedSolves.length }} solves?</p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-danger" (click)="modalRef?.hide()">No</button>
+        <button class="btn btn-primary" (click)="deleteSolves()">Yes</button>
+    </div>
+</ng-template>

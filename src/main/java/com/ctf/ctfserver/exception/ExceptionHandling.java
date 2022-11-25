@@ -56,6 +56,8 @@ public class ExceptionHandling implements ErrorController { //implement error co
 
     public static final String SUBMISSIONS_DELETED_SUCCESSFULLY = "Submissions were successfully deleted";
 
+    public static final String SUBMISSIONS_SOLVED_BY_ADMIN_SUCCESSFULLY = "Solved by admin successfully";
+
     @ExceptionHandler(DisabledException.class)
     public ResponseEntity<HttpResponse> accountDisabledException() {
         return createHttpResponse(BAD_REQUEST, ACCOUNT_DISABLED);

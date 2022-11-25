@@ -7,6 +7,7 @@ import { UserService } from './../../shared/service/user.service';
 import { Component, OnInit, TemplateRef, OnDestroy, HostBinding } from '@angular/core';
 import { User } from 'src/app/shared/model/user';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { EChartsOption } from 'echarts';
 
 @Component({
   selector: 'app-admin-users',
@@ -142,5 +143,4 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
       
     } 
   }
-
 }

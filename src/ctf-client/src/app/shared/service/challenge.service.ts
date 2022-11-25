@@ -63,4 +63,8 @@ export class ChallengeService {
     return this.http.patch<any>(`${this.host}/api/flag/edit`, updateFlagForm);
   }
 
+  public getMissingChallengesForUser(id: string) {
+    return this.http.get<Challenge[]>(`${this.host}/api/challenge/missing/${id}`);
+  }
+
 }

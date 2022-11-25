@@ -69,14 +69,14 @@
                         <ng-container *ngIf="filterBy.value === 'username'; else notUsername">
                             <td  class="col-md-2">
                                 
-                                <a routerLink="" innerHtml='{{user.username | textHighlight:query.value}}'>   
+                                <a [routerLink]="[user.id]" innerHtml='{{user.username | textHighlight:query.value}}'>   
                                 </a>
                             </td>
                         </ng-container>
                     
                         <ng-template #notUsername>
                             <td class="col-md-2">
-                                <a routerLink="" innerHtml="{{user.username}}"></a>    
+                                <a [routerLink]="[user.id]" innerHtml="{{user.username}}"></a>    
                             </td>   
                         </ng-template>
                         
@@ -106,7 +106,7 @@
                                 class="badge badge-success">verified</span>
                         </td>
                         <td class="d-md-table-cell d-lg-table-cell text-center  col-md-1" value="True">
-                            <span *ngIf="user.roles.length != 2 && user.hidden" class="badge badge-danger">hidden</span>
+                            <span *ngIf="user.hidden" class="badge badge-danger">hidden</span>
                         </td>
                         <td class="d-md-table-cell d-lg-table-cell text-center  col-md-1" value="False">
                             <span *ngIf="user.roles.length != 2 && !user.banned" class="badge badge-danger">banned</span>
@@ -165,3 +165,4 @@
         </div>
     </div>
 </div>
+ 

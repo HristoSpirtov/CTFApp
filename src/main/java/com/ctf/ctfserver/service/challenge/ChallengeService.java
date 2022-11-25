@@ -1,8 +1,10 @@
 package com.ctf.ctfserver.service.challenge;
 
+import com.ctf.ctfserver.domain.entities.Challenge;
 import com.ctf.ctfserver.domain.models.service.ChallengeServiceModel;
 import com.ctf.ctfserver.domain.models.service.FlagServiceModel;
 
+import java.util.Arrays;
 import java.util.List;
 
 public interface ChallengeService {
@@ -27,4 +29,6 @@ public interface ChallengeService {
     void createFlag(FlagServiceModel flagServiceModel, String ChallengeId);
 
     void editFlag(FlagServiceModel flagCreateBindingModelToFlagServiceModel);
+
+    List<ChallengeServiceModel> getAllMissingChallengesForUser(String id);
 }

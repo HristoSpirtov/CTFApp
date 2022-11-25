@@ -6,6 +6,10 @@ fa-icon.inContainer {
     cursor: pointer;
 }
 
+fa-icon:hover {
+    color: black !important;
+}
+
 a {
     color: inherit;
 }

@@ -11,10 +11,15 @@ import com.ctf.ctfserver.domain.models.service.FlagServiceModel;
 import com.ctf.ctfserver.repository.ChallengeRepository;
 import com.ctf.ctfserver.repository.FlagRepository;
 import com.ctf.ctfserver.repository.UserRepository;
+import com.ctf.ctfserver.service.challenge.interceptor.ChallengeWithCorrectSubmissionInterceptor;
+import com.ctf.ctfserver.service.challenge.interceptor.ChallengesForUserInterceptor;
+import com.ctf.ctfserver.service.challenge.interceptor.SubmissionsForUserOnlyInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
+import java.sql.Array;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -60,6 +65,23 @@ public class ChallengeServiceImpl implements ChallengeService {
     public void editFlag(FlagServiceModel flagServiceModel) {
         Flag flag = flagRepository.findById(flagServiceModel.getId()).get();
         flag.setFlag(flagServiceModel.getFlag());
+    }
+
+    @Override
+    public List<ChallengeServiceModel> getAllMissingChallengesForUser(String id) {
+        User user = this.userRepository.findById(id).get();
+
+        List<ChallengeServiceModel> collect = this.challengeRepository.findAll().stream()
+                .map(ChallengeMapper.INSTANCE::ChallengeToChallengeServiceModel)
+                .map(challenge -> ChallengesForUserInterceptor.getInstance().process(challenge, user.getId()))
+                .filter(Objects::nonNull)
+                .map(challenge -> SubmissionsForUserOnlyInterceptor.getInstance().process(challenge, user.getName()))
+                .filter(Objects::nonNull)
+                .map(challenge -> ChallengeWithCorrectSubmissionInterceptor.getInstance().process(challenge, user.getName()))
+                .filter(Objects::nonNull)
+                .filter(challenge -> challenge.getSubmissions().size() == 0)
+                .collect(Collectors.toList());
+        return collect;
     }
 
     @Override
@@ -125,6 +147,8 @@ public class ChallengeServiceImpl implements ChallengeService {
         });
         return ChallengeMapper.INSTANCE.challengeToChallengeServiceModel(edited);
     }
+
+
 
     @Override
     public void deleteFlag(String flagId) {

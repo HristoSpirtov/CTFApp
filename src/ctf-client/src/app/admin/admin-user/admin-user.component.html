@@ -1,0 +1,76 @@
+<admin-jumbotron>
+    <div *ngIf="user" class="container">
+        <h1 class="text-center">{{user.username}}</h1>
+        <h6>
+            <span *ngIf="user.roles.length == 2" class="badge badge-primary" style="margin-right: 5px;">admin</span>
+            <span *ngIf="user.roles.length != 2 && user.verified" class="badge badge-success"
+                style="margin-right: 5px;">verified</span>
+            <span *ngIf="user.hidden" class="badge badge-danger" style="margin-right: 5px;">hidden</span>
+            <span *ngIf="user.roles.length != 2 && !user.banned" class="badge badge-danger">banned</span>
+        </h6>
+        <h2 class="text-center">{{user.email}}</h2>
+        <h2 class="text-center">{{user.school}}</h2>
+        <h3 *ngIf="user.hidden" class="text-center">place</h3>
+        <h3 class="text-center"> points</h3>
+        <hr class="w-50">
+        <div class="pt-3">
+            <fa-icon class="inContainer text-dark" [icon]="userEdiIcon" tooltip="Edit User" placement="top"></fa-icon>
+            <fa-icon class="inContainer text-dark" [icon]="chartIcon" tooltip="User Statistics" placement="top"
+                (click)="openStatisticsModal(statistics)"></fa-icon>
+            <fa-icon class="inContainer text-dark" [icon]="trophyIcon" tooltip="Award User" placement="top"></fa-icon>
+            <fa-icon class="inContainer text-dark" [icon]="mailIcon" tooltip="Email User" placement="top"></fa-icon>
+            <fa-icon class="inContainer text-dark" [icon]="trashIcon" tooltip="Delete User" placement="top"></fa-icon>
+            <fa-icon class="inContainer text-dark" [icon]="networkIcon" tooltip="IP Addresses" placement="top">
+            </fa-icon>
+        </div>
+    </div>
+</admin-jumbotron>
+
+<div class="container" style="padding-top: 3rem!important;">
+    <tabset [justified]="true" #tabset>
+        <tab heading="Solves" id="flags">
+            <app-user-solves [solves]="solves" (deleteSolvesEvent)="refresh()" *ngIf="tabset.tabs[0]?.active"></app-user-solves>
+        </tab>
+        <tab heading="Fails" id="fails">
+            <app-user-fails [solves]="fails" (deleteSolvesEvent)="refresh()" *ngIf="tabset.tabs[1]?.active"></app-user-fails>
+        </tab>
+        <tab heading="Awards" id="awards">
+            AWARDS!
+        </tab>
+        <tab heading="Missing" id="missing">
+            <app-user-missing *ngIf="tabset.tabs[3]?.active" [challenges]="missingChallenges" [username]="user.username" (deleteSolvesEvent)="refresh()"></app-user-missing>
+        </tab>
+    </tabset>
+</div>
+
+<ng-template #statistics>
+    <div class="modal-header">
+        <h4 class="modal-title">User Statistics</h4>
+        <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+            <span aria-hidden="true" class="visually-hidden">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="row" *ngIf="solves && solves.length !== 0 else empty">
+            <div class="col-md-6">
+                <app-pie-chart [pieChartData] = "pieChartData" [chartName] = "'Solve Percentages'"></app-pie-chart>
+            </div>
+            <div class="col-md-6">  
+                <app-pie-chart [pieChartData] = "pieChartData" [chartName] = "'Solve Percentages'"></app-pie-chart>
+            </div>
+        </div> 
+        <div class="col-md-12" *ngIf="solves && solves.length !== 0">
+            <app-line-chart [lineChartData] = lineChartData [chartName] = "'Score Over Time'" [username]="user.username"></app-line-chart>
+        </div>
+
+        <ng-template #empty>
+            <div class="row min-vh-25">
+                <h3 style="opacity: 50%;" class="text-center w-100 justify-content-center align-self-center">
+                No data yet
+                </h3>
+            </div>
+        </ng-template>
+ 
+    </div>
+</ng-template>
+

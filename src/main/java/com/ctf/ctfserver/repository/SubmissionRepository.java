@@ -14,8 +14,8 @@ import java.util.List;
 @Repository
 public interface SubmissionRepository extends JpaRepository<Submission, String> {
     List<Submission> findAllByType(SubmissionType type);
-
+    List<Submission> findAllByTypeAndUserId(SubmissionType type, String id);
     @Modifying
-    @Query("delete from Submission s where s.id=:id")
+    @Query("delete from Submission s where s.id = :id")
     void deleteSubmissions(@Param("id") String id);
 }

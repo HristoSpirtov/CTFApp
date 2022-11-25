@@ -1,0 +1,17 @@
+fa-icon.inContainer {
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 2rem ;
+    color: #212529;
+    cursor: pointer;
+}
+
+fa-icon:hover {
+    color: black !important;
+}
+
+a {
+    color: inherit;
+}
+
+
