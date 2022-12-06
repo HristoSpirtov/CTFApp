@@ -12,7 +12,7 @@ export class AuthenticationGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.isUserLoggedIn();
+    return this.isUserLoggedIn(state);
   }
 
   isLoggedIn! : boolean;
@@ -25,12 +25,12 @@ export class AuthenticationGuard implements CanActivate {
   
   
 
-  private isUserLoggedIn() : boolean {
+  private isUserLoggedIn(state : RouterStateSnapshot) : boolean {
     if (this.isLoggedIn) {
       return true;
     }
     this.notificationService.notify(NotificationType.ERROR, `You need to login to access this page`);
-    this.router.navigateByUrl('/login');
+    this.router.navigate(['/login'], { queryParams: { returnUrl: state.url }});
     
     return false;
   }

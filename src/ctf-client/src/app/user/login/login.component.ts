@@ -50,6 +50,10 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.authenticationService.saveUser(response.body!);
           this.authenticationService.isLoginSubject.next(true);
           this.authenticationService.userSubject.next(response.body! as User);
+          if(response.body?.roles.length === 1) {
+            this.returnUrl = '/challenges';
+            this.notificationService.notify(NotificationType.ERROR, `You need to login with admin account`);
+          }
           this.setNotification(NotificationType.SUCCESS,  `User ${ response.body?.username } successfuly logged in`); 
           this.router.navigateByUrl(this.returnUrl);
           

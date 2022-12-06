@@ -13,7 +13,7 @@ export class AdminGuard implements CanActivateChild {
   canActivateChild(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.isAdmin();
+    return this.isAdmin(state);
   }
   
   user! : User | null;
@@ -27,12 +27,12 @@ export class AdminGuard implements CanActivateChild {
   }
 
 
-  private isAdmin(): boolean {  
+  private isAdmin(state : RouterStateSnapshot): boolean {  
     if (this.user?.roles.length == 2) {    
       return true;
     } 
-    this.router.navigateByUrl('/challenges');
     this.notificationService.notify(NotificationType.ERROR, `You need to login with admin account`);
+    this.router.navigate(['login'], { queryParams: { returnUrl: state.url }});
     return false;
   }
 
