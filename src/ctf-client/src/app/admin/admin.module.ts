@@ -23,6 +23,7 @@ import { AdminUserComponent } from './admin-user/admin-user.component';
 import { UserSolvesComponent } from './admin-user/user-solves/user-solves.component';
 import { UserFailsComponent } from './admin-user/user-fails/user-fails.component';
 import { UserMissingComponent } from './admin-user/user-missing/user-missing.component';
+import { UserAwardsComponent } from './admin-user/user-awards/user-awards.component';
 
 
 
@@ -60,6 +61,7 @@ const routes : Routes = [
     UserSolvesComponent,
     UserFailsComponent,
     UserMissingComponent,
+    UserAwardsComponent,
   ],
   imports: [
     FormsModule,

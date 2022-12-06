@@ -4,7 +4,7 @@ import { NotificationType } from '../../shared/enum/notification-type.enum';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { NotificationService } from '../../shared/service/notification.service';
 import { AuthenticationService } from '../../shared/service/authentication.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { take, Subscription } from 'rxjs';
 
@@ -15,10 +15,11 @@ import { take, Subscription } from 'rxjs';
 })
 export class LoginComponent implements OnInit, OnDestroy {
   isLoggedIn!: boolean;
-  subscription : Subscription
+  subscription : Subscription;
+  returnUrl!: string;
 
   
-  constructor(private router : Router, private authenticationService : AuthenticationService, private notificationService : NotificationService) {
+  constructor(private router : Router, private authenticationService : AuthenticationService, private notificationService : NotificationService, private route: ActivatedRoute) {
     this.subscription = this.authenticationService.isLoggedIn().subscribe(x => {
       this.isLoggedIn = x;
     })
@@ -30,6 +31,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (this.isLoggedIn) {
       this.router.navigateByUrl('/challenges')
     } 
+
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/challenges';
   }
 
   ngOnDestroy(): void {
@@ -48,7 +51,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.authenticationService.isLoginSubject.next(true);
           this.authenticationService.userSubject.next(response.body! as User);
           this.setNotification(NotificationType.SUCCESS,  `User ${ response.body?.username } successfuly logged in`); 
-          this.router.navigateByUrl('/challenges');
+          this.router.navigateByUrl(this.returnUrl);
           
       },     
         error: (errorResponse: HttpErrorResponse) => {

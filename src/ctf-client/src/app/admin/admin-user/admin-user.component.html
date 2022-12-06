@@ -35,7 +35,7 @@
             <app-user-fails [solves]="fails" (deleteSolvesEvent)="refresh()" *ngIf="tabset.tabs[1]?.active"></app-user-fails>
         </tab>
         <tab heading="Awards" id="awards">
-            AWARDS!
+            <app-user-awards></app-user-awards>
         </tab>
         <tab heading="Missing" id="missing">
             <app-user-missing *ngIf="tabset.tabs[3]?.active" [challenges]="missingChallenges" [username]="user.username" (deleteSolvesEvent)="refresh()"></app-user-missing>

@@ -3,6 +3,30 @@
 
 <head>
   <meta charset="utf-8">
+  <style>
+    html {
+      height: 100%;
+    }
+
+    body {
+      min-height: 100%;
+      margin: 0;
+    }
+
+    footer {
+      height: 50px;
+    }
+
+    body {
+      display: table;
+      width: 100%;
+    }
+
+    body>footer {
+      
+      display: table-row;
+    }
+  </style>
   <title>CtfClient</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,6 +35,14 @@
 
 <body>
   <app-root></app-root>
+  <footer>
+    <div class="container text-center">
+        <div class="text-secondary">
+            <small class="text-muted">Powered by CTFd</small><br>
+            <small class="text-muted">Version 1.0.0</small>
+        </div>
+    </div>
+</footer>
 </body>
 
 </html>

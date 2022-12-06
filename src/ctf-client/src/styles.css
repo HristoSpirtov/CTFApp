@@ -4,7 +4,6 @@
 
 @import 'prismjs/themes/prism.css';
 
-
 a {
     color: #337ab7;
 }
@@ -12,7 +11,6 @@ a {
 body {
     color: #373742;
 }
-
 
 .container{
     font-family: 'Lato', sans-serif;

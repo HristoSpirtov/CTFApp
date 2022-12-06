@@ -16,7 +16,6 @@ import { LineBreaksPipe } from './line-breaks.pipe';
 import { SortableComponent } from './sortable/sortable.component';
 import { SortableModule } from 'ngx-bootstrap/sortable';
 import { TextHighlightPipe } from './text-highlight.pipe';
-import { FooterComponent } from './footer/footer.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { PieChartComponent } from './chart/pie-chart/pie-chart.component';
@@ -32,7 +31,6 @@ import { LineChartComponent } from './chart/line-chart/line-chart.component';
     TextareaAutoresizeDirective,
     LineBreaksPipe,
     TextHighlightPipe,
-    FooterComponent,
     PieChartComponent,
     LineChartComponent, 
   ],
@@ -68,7 +66,6 @@ import { LineChartComponent } from './chart/line-chart/line-chart.component';
     TooltipModule,
     LineBreaksPipe,
     TextHighlightPipe,
-    FooterComponent,
     BsDropdownModule,
     NgxEchartsModule,
     PieChartComponent,
