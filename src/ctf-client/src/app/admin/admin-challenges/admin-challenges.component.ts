@@ -21,6 +21,7 @@ export class AdminChallengesComponent implements OnInit, OnDestroy {
   deleteIcon = faTrashAlt;
   editIcon = faPencilAlt;
   sortIcon = faSort;
+  
 
   modalRef?: BsModalRef;
 

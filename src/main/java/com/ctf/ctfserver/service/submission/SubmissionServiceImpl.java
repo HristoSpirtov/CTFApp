@@ -1,27 +1,24 @@
 package com.ctf.ctfserver.service.submission;
 
-import com.ctf.ctfserver.domain.entities.Challenge;
-import com.ctf.ctfserver.domain.entities.Flag;
-import com.ctf.ctfserver.domain.entities.Submission;
-import com.ctf.ctfserver.domain.entities.User;
+import com.ctf.ctfserver.domain.entities.*;
 import com.ctf.ctfserver.domain.enums.SubmissionType;
 import com.ctf.ctfserver.domain.models.mapper.SubmissionMapper;
 import com.ctf.ctfserver.domain.models.service.ChallengeServiceModel;
 import com.ctf.ctfserver.domain.models.service.ChartServiceModel;
 import com.ctf.ctfserver.domain.models.service.SolvedSubmissionServiceModel;
 import com.ctf.ctfserver.domain.models.service.SubmissionServiceModel;
-import com.ctf.ctfserver.repository.ChallengeRepository;
-import com.ctf.ctfserver.repository.FlagRepository;
-import com.ctf.ctfserver.repository.SubmissionRepository;
-import com.ctf.ctfserver.repository.UserRepository;
+import com.ctf.ctfserver.repository.*;
 import com.ctf.ctfserver.service.submission.collector.ChartServiceModelCollector;
-import com.ctf.ctfserver.service.submission.comparator.SubmissionDateComparator;
+import com.ctf.ctfserver.service.submission.comparator.ChartDataDateComparator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.function.BiPredicate;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,6 +30,16 @@ public class SubmissionServiceImpl implements SubmissionService {
     private final ChallengeRepository challengeRepository;
     private final UserRepository userRepository;
     private final FlagRepository flagRepository;
+
+    private final AwardRepository awardRepository;
+
+    private static final String CHART_DATE_FORMAT = "yyyy-MM-24\nHH:mm:ss";
+
+    private final Function<Submission, ChartServiceModel> mapSubmissionToChartServiceModel = (submission) ->
+            new ChartServiceModel(new SimpleDateFormat(CHART_DATE_FORMAT).format(submission.getDate()), submission.getChallenge().getValue());
+
+    private final Function<Award, ChartServiceModel> mapAwardToChartServiceModel = (award) ->
+            new ChartServiceModel(new SimpleDateFormat(CHART_DATE_FORMAT).format(award.getDate()), award.getValue());
 
 
     @Override
@@ -127,11 +134,21 @@ public class SubmissionServiceImpl implements SubmissionService {
 
     @Override
     public List<ChartServiceModel> getUserScoreOverTime(String userId) {
-
-        return this.submissionRepository
+        List<ChartServiceModel> solvesModels = this.submissionRepository
             .findAllByTypeAndUserId(SubmissionType.CORRECT, userId).stream()
-            .sorted(SubmissionDateComparator.getInstance())
-            .collect(ChartServiceModelCollector.toChartServiceModel());
+            .map(this.mapSubmissionToChartServiceModel)
+            .collect(Collectors.toList());
+
+        List<ChartServiceModel> awardsModels = this.awardRepository
+            .findAllByUserId(userId).stream()
+            .map(this.mapAwardToChartServiceModel)
+            .collect(Collectors.toList());
+
+        solvesModels.addAll(awardsModels);
+
+        return solvesModels.stream()
+                .sorted(ChartDataDateComparator.getInstance())
+                .collect(ChartServiceModelCollector.toChartServiceModel());
     }
 
 }

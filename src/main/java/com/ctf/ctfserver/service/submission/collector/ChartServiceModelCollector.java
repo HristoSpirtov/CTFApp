@@ -9,8 +9,8 @@ import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
-public class ChartServiceModelCollector implements Collector<Submission, List<ChartServiceModel>, List<ChartServiceModel>> {
-    private static final String DATE_FORMAT = "yyyy-MM-24\nHH:mm:ss";
+public class ChartServiceModelCollector implements Collector<ChartServiceModel, List<ChartServiceModel>, List<ChartServiceModel>> {
+
 
     public static ChartServiceModelCollector toChartServiceModel() {
         return new ChartServiceModelCollector();
@@ -22,11 +22,9 @@ public class ChartServiceModelCollector implements Collector<Submission, List<Ch
     }
 
     @Override
-    public BiConsumer<List<ChartServiceModel>, Submission> accumulator() {
-        return (list, submission) -> {
-            ChartServiceModel chartServiceModel = new ChartServiceModel();
-            setDate(submission, chartServiceModel);
-            setValue(list, submission, chartServiceModel);
+    public BiConsumer<List<ChartServiceModel>, ChartServiceModel> accumulator() {
+        return (list, chartServiceModel) -> {
+            setValue(list, chartServiceModel);
             list.add(chartServiceModel);
         };
     }
@@ -48,14 +46,11 @@ public class ChartServiceModelCollector implements Collector<Submission, List<Ch
     public Set<Characteristics> characteristics() {
         return new HashSet<>();
     }
-    private void setValue(List<ChartServiceModel> list, Submission submission, ChartServiceModel chartServiceModel) {
+    private void setValue(List<ChartServiceModel> list, ChartServiceModel chartServiceModel) {
         if(list.isEmpty()) {
-            chartServiceModel.setValue(submission.getChallenge().getValue());
+            chartServiceModel.setValue(chartServiceModel.getValue());
         } else {
-            chartServiceModel.setValue(submission.getChallenge().getValue() + list.get(list.size() - 1).getValue());
+            chartServiceModel.setValue(chartServiceModel.getValue() + list.get(list.size() - 1).getValue());
         }
-    }
-    private void setDate(Submission submission, ChartServiceModel chartServiceModel) {
-        chartServiceModel.setName(new SimpleDateFormat(DATE_FORMAT).format(submission.getDate()));
     }
 }

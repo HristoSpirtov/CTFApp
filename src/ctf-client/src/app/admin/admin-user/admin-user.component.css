@@ -14,4 +14,55 @@ a {
     color: inherit;
 }
 
+.form-control {
+    position: relative;
+    display: block;
+    border-radius: 0;
+    background-color: #fff;
+    font-weight: 400;
+    line-height: 1;
+    padding-top: 6;
+    padding-bottom: 6;
+    transition: background-color .3s, border-color .3s;
+    height: 40px !important;
+}
+
+.form-control:focus {
+    border-color: #a3d39c;
+    box-shadow: 0 0 0 0.1rem #a3d39c;
+    background-color: #fff;
+    transition: background-color .3s, border-color .3s;
+}
+
+
+
+textarea {
+    resize: none;
+    width: 100%;
+    min-height: 150px;
+    border-radius: 0;
+    background-color: #fff;
+    font-weight: 400;
+    padding: 10px;
+    overflow: hidden;
+}
+
+.textarea:focus {
+    border-color: #a3d39c;
+    box-shadow: 0 0 0 0.1rem #a3d39c;
+    background-color: #fff;
+    transition: background-color .3s, border-color .3s;
+}
+
+
+.table>tbody tr:hover {
+    background-color: #e6eaee;
+}
+
+input.ng-valid {
+   box-shadow: none ;
+}
+
+
+
 

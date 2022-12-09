@@ -1,7 +1,7 @@
 import { Challenge } from './../model/challenge';
 import { Observable } from 'rxjs';
 import { environment } from './../../../environments/environment';
-import { HttpClient, HttpEvent, HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthenticationService } from './authentication.service';
 import { Flag } from '../model/flag';

@@ -58,6 +58,8 @@ public class ExceptionHandling implements ErrorController { //implement error co
 
     public static final String SUBMISSIONS_SOLVED_BY_ADMIN_SUCCESSFULLY = "Solved by admin successfully";
 
+    public static final String AWARD_CREATED_SUCCESSFULLY = "Award created successfully";
+
     @ExceptionHandler(DisabledException.class)
     public ResponseEntity<HttpResponse> accountDisabledException() {
         return createHttpResponse(BAD_REQUEST, ACCOUNT_DISABLED);

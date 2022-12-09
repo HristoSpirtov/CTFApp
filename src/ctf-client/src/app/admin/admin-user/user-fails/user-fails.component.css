@@ -58,6 +58,10 @@ a[ng-reflect-router-link] {
     font-size: 78% !important;
 }
 
+.flag-props {
+    word-break: break-word!important;
+}
+
 
 
 

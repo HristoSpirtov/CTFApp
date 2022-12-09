@@ -17,7 +17,6 @@ import com.ctf.ctfserver.service.challenge.interceptor.SubmissionsForUserOnlyInt
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
-import java.sql.Array;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;

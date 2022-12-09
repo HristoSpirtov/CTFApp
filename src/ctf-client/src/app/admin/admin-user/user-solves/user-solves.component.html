@@ -28,7 +28,7 @@
                     <th class="sort-col text-center px-0 col-md-1"><b>Value <fa-icon [icon]="sortIcon"></fa-icon></b></th>
                     <th class="sort-col text-center px-0 col-md-4"><b>Time <fa-icon [icon]="sortIcon"></fa-icon></b></th>
                 </tr>
-            </thead>
+            </thead>    
             <tbody>
                 <tr *ngFor="let solve of solves">
                     <td class="border-right col-md-1" data-checkbox="">
@@ -43,7 +43,7 @@
                         </a>
                     </td>
 
-                    <td class="sort-col text-center px-0 col-md-2 min-font">
+                    <td class="sort-col text-center px-0 col-md-2 min-font flag-props">
                         <span>{{ solve.provided }}</span>
                     </td>
 

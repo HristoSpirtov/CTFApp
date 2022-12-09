@@ -54,7 +54,8 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
         authorizeRequests().antMatchers(SecurityConstant.PUBLIC_URLS).permitAll().and().
         authorizeRequests().anyRequest().authenticated().and().
         exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint).accessDeniedHandler(jwtAccessDeniedHandler).and().
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .accessDeniedHandler(jwtAccessDeniedHandler).and().
         addFilter(customAuthenticationFilter).
         addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
     }

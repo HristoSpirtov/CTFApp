@@ -61,4 +61,8 @@ public class User extends BaseEntity  {
     )
     private Collection<Role> roles;
 
+    @OneToMany(targetEntity = Award.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private Collection<Award> awards;
+
 }

@@ -28,7 +28,7 @@ import static com.ctf.ctfserver.constant.SecurityConstant.*;
 @RequiredArgsConstructor
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    private final AuthenticationManager authenticationManager;
+        private final AuthenticationManager authenticationManager;
     private final JWTTokenProvider jwtTokenProvider;
 
 

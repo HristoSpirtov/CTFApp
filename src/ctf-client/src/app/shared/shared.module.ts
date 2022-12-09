@@ -22,7 +22,6 @@ import { PieChartComponent } from './chart/pie-chart/pie-chart.component';
 import { LineChartComponent } from './chart/line-chart/line-chart.component';
 
 
-
 @NgModule({
   declarations: [
     SortableComponent,

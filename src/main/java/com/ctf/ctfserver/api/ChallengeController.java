@@ -25,8 +25,8 @@ import java.util.stream.Collectors;
 import static com.ctf.ctfserver.exception.ExceptionHandling.*;
 
 @RestController
-@RequiredArgsConstructor
-@RequestMapping("/api")
+    @RequiredArgsConstructor
+    @RequestMapping("/api")
 public class ChallengeController {
 
     private final ChallengeService challengeService;

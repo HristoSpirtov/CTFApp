@@ -13,6 +13,7 @@ import { AppComponent } from './app.component';
 import { Routes, RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { AwardService } from './shared/service/award.service';
 
 
 const routes: Routes = [
@@ -39,6 +40,7 @@ const routes: Routes = [
     UserService, 
     ChallengeService,
     SubmissionService,
+    AwardService,
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
   ],
   exports :[],

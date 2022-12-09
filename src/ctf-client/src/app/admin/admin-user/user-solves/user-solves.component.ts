@@ -41,8 +41,6 @@ export class UserSolvesComponent implements OnInit {
         }
       });
     }
-    
-    
   }
 
   radioChangeMaster() {
